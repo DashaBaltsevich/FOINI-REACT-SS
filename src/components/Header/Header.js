@@ -1,13 +1,9 @@
+import { Link } from 'react-router-dom';
+import './Header.scss';
 
-import { Routes, Route, Link } from 'react-router-dom';
-import {Main} from './Main';
-import {Users} from './Users'
-import { Services } from './Services';
-import './styles/Header.scss';
-
-export const Header = () => {
+export const Header = ( {children} ) => {
     return (
-        <div className='header__wrapper'>
+        <>
             <header className='header'>
                 <div className='container'>
                     <div className='header__inner'>
@@ -32,11 +28,7 @@ export const Header = () => {
                     </div>
                 </div>
             </header>
-            <Routes>
-                <Route path='/' element={<Main />}/>
-                <Route path='services' element={<Services />} />
-                <Route path='users' element={<Users />} />
-            </Routes>
-        </div>
+            {children}
+        </>
     )
 }

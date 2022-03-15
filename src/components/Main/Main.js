@@ -1,4 +1,4 @@
-import './styles/Main.scss';
+import './Main.scss';
 
 export const Main = () => {
     return (

@@ -1,19 +1,29 @@
-import { createContext, useState } from "react";
-import { Header } from "./components/Header";
-import { Footer } from "./components/Footer";
+import { createContext, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { Header } from './components/Header';
+import { Footer } from './components/Footer';
+import { Main } from './components/Main';
+import { Services } from './components/Services';
+import { Users } from './components/Users';
 import './App.scss';
+import { SetUserContext } from './components/UsersContext/UsersContext';
 
-export const PersonsContext = createContext(null);
+
 
 function App() {
 
-  const [persons, setPersons] = useState(null);
   return (
     <div style={styleDiv}>
-      <PersonsContext.Provider value = {persons}>
-        <Header />
-      </PersonsContext.Provider>
-      <Footer />
+        <Header>
+          <SetUserContext>
+            <Routes>
+              <Route path='/' element={<Main />}/>
+              <Route path='services' element={<Services />} />
+              <Route path='users' element={<Users />} />
+            </Routes>
+          </SetUserContext>
+        </Header>
+        <Footer />
     </div>
       
   );
