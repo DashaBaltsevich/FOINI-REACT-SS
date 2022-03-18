@@ -6,9 +6,9 @@ export const UsersContext = createContext(null);
 /*Начальное состояние юзеров - пустой массив */
 const initialState = {
     users: [],
-}
+};
 
-/*Функция reducer, если type в action успешный, то мы загружаем тело запроса (payload) в массив юзеров, а также обновляем стэйт, возвращаем новый стэйт  */
+/*Функция reducer - для обработки действий, если type в action успешный, то мы загружаем тело запроса (payload) в массив юзеров, а также обновляем стэйт, возвращаем новый стэйт  */
 const reducer = (state, action) => {
     if(action.type === 'GET_USERS_SUCCESS') {
         return {
@@ -16,10 +16,12 @@ const reducer = (state, action) => {
             users: action.payload,
         }
     }
-}
+};
 
 export const SetUserContext = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
+
+    /*Функция: когда мы ее вызываем, в action type загружается GET_USERS_SUCCESS и в action payload загружаются все юзеры */
 
     const usersDispatch = (users) => {
         dispatch({
@@ -31,4 +33,4 @@ export const SetUserContext = ({ children }) => {
     return (
         <UsersContext.Provider value={{state, usersDispatch}} children={children} />
     )
-}
+};

@@ -30,6 +30,7 @@
         img {
             border-right: 5px gray solid;
             border-left: 5px gray solid;
+            width: 200px;
         }
     }
     &__text-wrapper {
@@ -42,9 +43,11 @@
         font-size: 18px;
     }
 }
+
 .l-team__position, .l-team__name{
     padding-bottom: 10px;
 }
+
 /*hover*/
 .l-team__cell:hover {
     transform: scale(1.05);

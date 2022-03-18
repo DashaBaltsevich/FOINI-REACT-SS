@@ -6,4 +6,4 @@ export const Footer = () => {
             <p className="footer__text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
         </footer>
     );
-}
+};

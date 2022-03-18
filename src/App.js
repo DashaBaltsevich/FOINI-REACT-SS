@@ -1,4 +1,3 @@
-import { createContext, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -9,11 +8,9 @@ import './App.scss';
 import { SetUserContext } from './components/UsersContext/UsersContext';
 
 
-
 function App() {
-
   return (
-    <div style={styleDiv}>
+    <div>
         <Header>
           <SetUserContext>
             <Routes>
@@ -25,15 +22,7 @@ function App() {
         </Header>
         <Footer />
     </div>
-      
-  );
-}
+  )
+};
 
 export default App;
-
-
-const styleDiv = {
-  display: 'flex',
-  flexDirection: 'column',
-  minHeight: 100 + 'vh',
-}
