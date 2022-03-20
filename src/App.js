@@ -5,21 +5,17 @@ import { Main } from './components/Main';
 import { Services } from './components/Services';
 import { Users } from './components/Users';
 import './App.scss';
-import { SetUserContext } from './components/UsersContext/UsersContext';
 
 
 function App() {
   return (
     <div>
-        <Header>
-          <SetUserContext>
-            <Routes>
+        <Header />
+        <Routes>
               <Route path='/' element={<Main />}/>
               <Route path='services' element={<Services />} />
               <Route path='users' element={<Users />} />
-            </Routes>
-          </SetUserContext>
-        </Header>
+        </Routes>
         <Footer />
     </div>
   )

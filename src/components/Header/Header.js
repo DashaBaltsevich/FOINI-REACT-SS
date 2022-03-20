@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import './Header.scss';
 
-export const Header = ( {children} ) => {
+export const Header = () => {
     const setActive = ({ isActive }) =>(isActive ? "l-nav__link-active l-nav__link" : "l-nav__link");
     return (
         <>
@@ -29,7 +29,6 @@ export const Header = ( {children} ) => {
                     </div>
                 </div>
             </header>
-            {children}
         </>
     )
 }

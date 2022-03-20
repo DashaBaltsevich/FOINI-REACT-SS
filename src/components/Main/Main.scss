@@ -1,6 +1,7 @@
+@import '../../const.scss';
 .s-main {
     background-color: rgb(34, 34, 34);
-    min-height: calc(100vh - 100px - 40px);
+    min-height: calc(100vh - #{$header-height} - #{$footer-height});
     display: flex;
     flex-direction: column;
     justify-content: center;

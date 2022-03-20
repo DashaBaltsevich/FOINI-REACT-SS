@@ -1,7 +1,10 @@
+@import '../../const.scss';
+
 .footer {
     margin-top: auto;
     background-color: rgb(34, 34, 34);
     text-align: center;
+    height: $footer-height;
     color: #fff;
     padding: 10px 0;
 }
