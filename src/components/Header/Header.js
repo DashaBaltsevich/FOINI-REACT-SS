@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 import './Header.scss';
 
 export const Header = ( {children} ) => {
+    const setActive = ({ isActive }) =>(isActive ? "l-nav__link-active l-nav__link" : "l-nav__link");
     return (
         <>
             <header className="header">
@@ -15,25 +16,13 @@ export const Header = ( {children} ) => {
                         <nav className="header__nav">
                             <ul className="l-nav">
                             <li className="l-nav__item">
-                                <NavLink to='/' className="l-nav__link"  style = {({ isActive }) => ({
-                                    color: isActive ? 'green' : '',
-                                })}>
-                                Home
-                                </NavLink>
+                                <NavLink to='/' className={setActive}>Home</NavLink>
                             </li>
                             <li className="l-nav__item">
-                                <NavLink to='/services' className="l-nav__link" style = {({ isActive }) => ({
-                                    color: isActive ? 'green' : '',
-                                })}>
-                                    Services
-                                </NavLink>
+                                <NavLink to='/services' className={setActive}>Services</NavLink>
                             </li>
                             <li className="l-nav__item">
-                                <NavLink to='/users' className="l-nav__link" style = {({ isActive }) => ({
-                                    color: isActive ? 'green' : '',
-                                })}>
-                                    Users
-                                </NavLink>
+                                <NavLink to='/users' className={setActive}>Users</NavLink>
                             </li>
                             </ul>
                         </nav>

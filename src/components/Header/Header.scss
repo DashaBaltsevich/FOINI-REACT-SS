@@ -29,6 +29,9 @@
   text-transform: uppercase;
   position: relative;
   transition: color 0.2s ease-out;
+  &-active {
+    color: green;
+  }
 }
   /*hover*/
 .l-nav__link::before {
