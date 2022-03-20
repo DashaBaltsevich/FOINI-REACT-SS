@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './Header.scss';
 
 export const Header = ( {children} ) => {
@@ -8,20 +8,32 @@ export const Header = ( {children} ) => {
                 <div className="container">
                     <div className="header__inner">
                         <div className="header__logo">
-                            <Link to='/'>
+                            <NavLink to='/'>
                             <img src="./img/logo.png" className="App-logo" alt="logo" />
-                            </Link>
+                            </NavLink>
                         </div>
                         <nav className="header__nav">
                             <ul className="l-nav">
                             <li className="l-nav__item">
-                                <Link to='/' className="l-nav__link">Home</Link>
+                                <NavLink to='/' className="l-nav__link"  style = {({ isActive }) => ({
+                                    color: isActive ? 'green' : '',
+                                })}>
+                                Home
+                                </NavLink>
                             </li>
                             <li className="l-nav__item">
-                                <Link to='/services' className="l-nav__link">Services</Link>
+                                <NavLink to='/services' className="l-nav__link" style = {({ isActive }) => ({
+                                    color: isActive ? 'green' : '',
+                                })}>
+                                    Services
+                                </NavLink>
                             </li>
                             <li className="l-nav__item">
-                                <Link to='/users' className="l-nav__link">Users</Link>
+                                <NavLink to='/users' className="l-nav__link" style = {({ isActive }) => ({
+                                    color: isActive ? 'green' : '',
+                                })}>
+                                    Users
+                                </NavLink>
                             </li>
                             </ul>
                         </nav>
