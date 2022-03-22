@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Header.scss';
 
-export const Header = () => {
+export const Header = ({ setModalRegState, setModalLogState}) => {
     const setActive = ({ isActive }) =>(isActive ? "l-nav__link-active l-nav__link" : "l-nav__link");
+
+
     return (
         <>
             <header className="header">
@@ -26,6 +29,15 @@ export const Header = () => {
                             </li>
                             </ul>
                         </nav>
+                        <div className="btn-login__wrapper">
+                            <button className="btn-login" onClick={() => {
+                                setModalLogState(true)
+                            }}>Sign in</button>
+                            <button className="btn-login" onClick={() => {
+                                setModalRegState(true)
+                            }}>Sign up</button>
+                        </div>
+                        
                     </div>
                 </div>
             </header>
