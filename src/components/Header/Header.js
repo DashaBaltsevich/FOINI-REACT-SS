@@ -5,13 +5,11 @@ import { LoginForm } from '../LoginForm/LoginForm';
 import { RegForm } from '../RegForm/RegForm';
 import './Header.scss';
 
-export const Header = ({ setModalRegState, setModalLogState}) => {
+export const Header = () => {
     const setActive = ({ isActive }) =>(isActive ? "l-nav__link-active l-nav__link" : "l-nav__link");
+
     const [isLoginForm, setIsLoginForm] = useState(false);
-    const [isReginForm, setIsReginForm] = useState(false);
-
-    
-
+    const [isReginForm, setIsRegForm] = useState(false);
 
     return (
         <>
@@ -38,10 +36,10 @@ export const Header = ({ setModalRegState, setModalLogState}) => {
                         </nav>
                         <div className="btn-login__wrapper">
                             <button className="btn-login" onClick={() => {
-                                setModalLogState(true)
+                                setIsLoginForm(true)
                             }}>Sign in</button>
                             <button className="btn-login" onClick={() => {
-                                setModalRegState(true)
+                                setIsRegForm(true)
                             }}>Sign up</button>
                         </div>
                         
@@ -49,15 +47,14 @@ export const Header = ({ setModalRegState, setModalLogState}) => {
                 </div>
             </header>
             {isLoginForm &&
-                <ModalWindow onClose={()=>{setModalLogState(false)}}>
+                <ModalWindow onClose={()=>{setIsLoginForm(false)}}>
                     <LoginForm />
                 </ModalWindow>
             }
             {isReginForm &&
-                <ModalWindow onClose={()=>{setModalRegState(false)}}>
+                <ModalWindow onClose={()=>{setIsRegForm(false)}}>
                     <RegForm />
                 </ModalWindow>
-
             }
         </>
     )

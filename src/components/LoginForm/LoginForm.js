@@ -1,9 +1,8 @@
-import { ModalWindow } from '../ModalWindow/ModalWindow';
 import { useState } from 'react';
-import '../RegForm/RegForm.scss';
+import './LoginForm.scss';
 import axios from 'axios';
 
-export const LoginForm = ({ setModalLogState }) => {
+export const LoginForm = () => {
 
     const [formLoginValues, setFormLoginValues] = useState({
         email: '',
@@ -13,7 +12,7 @@ export const LoginForm = ({ setModalLogState }) => {
     const handleFormSubmit = (event) => {
         event.preventDefault();
         console.log('Отправлено');
-        console.log(formLoginValues)
+        console.log(formLoginValues);
 
         axios.post(``, formLoginValues)
             .then((data) => {
@@ -25,25 +24,20 @@ export const LoginForm = ({ setModalLogState }) => {
     }
 
     return (
-        <ModalWindow>
-            <form className="form-reg" method="POST" onSubmit={handleFormSubmit}>                
-                <label htmlFor="email" className="label-reg">Почта:</label> 
-                <input type="email" id="email" value={formLoginValues.email} className="input-reg" onChange={(e) => setFormLoginValues(oldValues => ({
+            <form className="f-login" method="POST" onSubmit={handleFormSubmit}>                
+                <label htmlFor="email" className="f-login__field-label">Почта:</label> 
+                <input type="email" id="email" value={formLoginValues.email} className="f-login__field" onChange={(e) => setFormLoginValues(oldValues => ({
                     ...oldValues,
                     email: e.target.value
                 }))}/>
                 
-                <label htmlFor="password" className="label-reg">Пароль:</label>
-                <input type="password" id="password" value={formLoginValues.password} className="input-reg" onChange={(e) => setFormLoginValues(oldValues => ({
+                <label htmlFor="password" className="f-login__field-label">Пароль:</label>
+                <input type="password" id="password" value={formLoginValues.password} className="f-login__field" onChange={(e) => setFormLoginValues(oldValues => ({
                     ...oldValues,
                     password: e.target.value
                 }))}/>
                 
-                <button className="btn-form-reg" type="submit">Войти</button>
+                <button className="btn-form-login" type="submit">Войти</button>
             </form>
-            <button className="btn-close" type="submit" onClick={() => {
-                setModalLogState(false)
-            }}>Закрыть</button>
-        </ModalWindow>
     );
 };

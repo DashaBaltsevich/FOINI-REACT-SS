@@ -1,11 +1,8 @@
-import { ModalWindow } from '../ModalWindow/ModalWindow';
 import { useState } from 'react';
 import axios from 'axios';
 import './RegForm.scss';
 
-
-
-export const RegForm = ({ setModalRegState }) => {
+export const RegForm = () => {
 
     const [formRegValues, setFormRegValues] = useState({
         firstName: '',
@@ -29,37 +26,32 @@ export const RegForm = ({ setModalRegState }) => {
     }
 
     return (
-        <ModalWindow>
-            <form className="form-reg" method="POST" onSubmit={handleFormSubmit}>
-                <label htmlFor="firstName" className="label-reg">Имя:</label>
-                <input type="text" id="firstName" className="input-reg" value={formRegValues.firstName} onChange={(e) => setFormRegValues(oldValues => ({
+            <form className="f-registration" method="POST" onSubmit={handleFormSubmit}>
+                <label htmlFor="firstName" className="f-registration__field-label">Имя:</label>
+                <input type="text" id="firstName" className="f-registration__field" value={formRegValues.firstName} onChange={(e) => setFormRegValues(oldValues => ({
                     ...oldValues,
                     firstName: e.target.value
                 }))}/>
                 
-                <label htmlFor="lastName" className="label-reg">Фамилия:</label>
-                <input type="text" id="lastName" className="input-reg" value={formRegValues.lastName} onChange={(e) => setFormRegValues(oldValues => ({
+                <label htmlFor="lastName" className="f-registration__field-label">Фамилия:</label>
+                <input type="text" id="lastName" className="f-registration__field" value={formRegValues.lastName} onChange={(e) => setFormRegValues(oldValues => ({
                     ...oldValues,
                     lastName: e.target.value
                 }))}/>
                 
-                <label htmlFor="email" className="label-reg">Почта:</label> 
-                <input type="email" id="email" className="input-reg" value={formRegValues.email} onChange={(e) => setFormRegValues(oldValues => ({
+                <label htmlFor="email" className="f-registration__field-label">Почта:</label> 
+                <input type="email" id="email" className="f-registration__field" value={formRegValues.email} onChange={(e) => setFormRegValues(oldValues => ({
                     ...oldValues,
                     email: e.target.value
                 }))}/>
                 
-                <label htmlFor="password" className="label-reg">Пароль:</label>
-                <input type="password" id="password" className="input-reg" value={formRegValues.password} onChange={(e) => setFormRegValues(oldValues => ({
+                <label htmlFor="password" className="f-registration__field-label">Пароль:</label>
+                <input type="password" id="password" className="f-registration__field" value={formRegValues.password} onChange={(e) => setFormRegValues(oldValues => ({
                     ...oldValues,
                     password: e.target.value
                 }))}/>
                 
-                <button className="btn-form-reg">Зарегистрироваться</button>
+                <button className="btn-form-registration">Зарегистрироваться</button>
             </form>
-            <button className="btn-close" onClick={() => {
-                setModalRegState(false)
-            }}>Закрыть</button>
-        </ModalWindow>
     );
 };
