@@ -1,9 +1,16 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { ModalWindow } from '../ModalWindow/ModalWindow';
+import { LoginForm } from '../LoginForm/LoginForm';
+import { RegForm } from '../RegForm/RegForm';
 import './Header.scss';
 
 export const Header = ({ setModalRegState, setModalLogState}) => {
     const setActive = ({ isActive }) =>(isActive ? "l-nav__link-active l-nav__link" : "l-nav__link");
+    const [isLoginForm, setIsLoginForm] = useState(false);
+    const [isReginForm, setIsReginForm] = useState(false);
+
+    
 
 
     return (
@@ -41,6 +48,17 @@ export const Header = ({ setModalRegState, setModalLogState}) => {
                     </div>
                 </div>
             </header>
+            {isLoginForm &&
+                <ModalWindow onClose={()=>{setModalLogState(false)}}>
+                    <LoginForm />
+                </ModalWindow>
+            }
+            {isReginForm &&
+                <ModalWindow onClose={()=>{setModalRegState(false)}}>
+                    <RegForm />
+                </ModalWindow>
+
+            }
         </>
     )
 }

@@ -1,4 +1,4 @@
-import ReactDOM from 'react-dom';
+import { ModalWindow } from '../ModalWindow/ModalWindow';
 import { useState } from 'react';
 import '../RegForm/RegForm.scss';
 import axios from 'axios';
@@ -24,8 +24,8 @@ export const LoginForm = ({ setModalLogState }) => {
             })
     }
 
-    return ReactDOM.createPortal(
-        <div className='form-reg__wrapper'>
+    return (
+        <ModalWindow>
             <form className="form-reg" method="POST" onSubmit={handleFormSubmit}>                
                 <label htmlFor="email" className="label-reg">Почта:</label> 
                 <input type="email" id="email" value={formLoginValues.email} className="input-reg" onChange={(e) => setFormLoginValues(oldValues => ({
@@ -44,7 +44,6 @@ export const LoginForm = ({ setModalLogState }) => {
             <button className="btn-close" type="submit" onClick={() => {
                 setModalLogState(false)
             }}>Закрыть</button>
-        </div>,
-        document.getElementById('root')
+        </ModalWindow>
     );
 };
