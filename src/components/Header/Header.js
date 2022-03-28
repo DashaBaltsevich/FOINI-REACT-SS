@@ -48,12 +48,12 @@ export const Header = () => {
             </header>
             {isLoginForm &&
                 <ModalWindow onClose={()=>{setIsLoginForm(false)}}>
-                    <LoginForm />
+                    <LoginForm setIsLoginForm={setIsLoginForm}/>
                 </ModalWindow>
             }
             {isReginForm &&
                 <ModalWindow onClose={()=>{setIsRegForm(false)}}>
-                    <RegForm />
+                    <RegForm setIsRegForm={setIsRegForm}/>
                 </ModalWindow>
             }
         </>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './LoginForm.scss';
 import axios from 'axios';
 
-export const LoginForm = () => {
+export const LoginForm = ({ setIsLoginForm }) => {
 
     const [formLoginValues, setFormLoginValues] = useState({
         email: '',
@@ -14,12 +14,15 @@ export const LoginForm = () => {
         console.log('Отправлено');
         console.log(formLoginValues);
 
-        axios.post(``, formLoginValues)
+        axios.post(`https://infinite-woodland-61407.herokuapp.com/api/sign-in`, formLoginValues)
             .then((data) => {
-               console.log(data)
+               localStorage.setItem('accessToken', data?.data?.content.token.accessToken);
+               localStorage.setItem('refreshToken', data?.data?.content.token.refreshToken);
+               console.log(localStorage);
+               setIsLoginForm(false);
             })
-            .catch(() => {
-              throw new Error('Error. No data');
+            .catch((error) => {
+              alert(error);
             })
     }
 

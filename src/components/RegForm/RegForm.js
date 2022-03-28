@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import './RegForm.scss';
 
-export const RegForm = () => {
+export const RegForm = ({ setIsRegForm }) => {
 
     const [formRegValues, setFormRegValues] = useState({
         firstName: '',
@@ -13,15 +13,16 @@ export const RegForm = () => {
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
-        console.log('Отправлено');
         console.log(formRegValues)
 
-        axios.post(`/users`, formRegValues)
+        axios.post(`https://infinite-woodland-61407.herokuapp.com/api/sign-up`, formRegValues)
             .then((data) => {
                console.log(data)
+               alert('Отправлено');
+               setIsRegForm(false);
             })
-            .catch(() => {
-              throw new Error('Error. No data');
+            .catch((error) => {
+                alert(error);
             })
     }
 

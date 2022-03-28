@@ -11,7 +11,7 @@ export const ModalWindow = ({ children, onClose }) => {
         document.body.appendChild(div);
 
         return () => div.remove();
-    }, [])
+    }, [div])
 
     return ReactDOM.createPortal(
         <>
