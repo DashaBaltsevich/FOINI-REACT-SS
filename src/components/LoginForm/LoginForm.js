@@ -3,7 +3,6 @@ import './LoginForm.scss';
 import axios from 'axios';
 
 export const LoginForm = ({ setIsLoginForm }) => {
-
     const [formLoginValues, setFormLoginValues] = useState({
         email: '',
         password: '',
@@ -11,19 +10,14 @@ export const LoginForm = ({ setIsLoginForm }) => {
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
-        console.log('Отправлено');
-        console.log(formLoginValues);
-
         axios.post(`https://infinite-woodland-61407.herokuapp.com/api/sign-in`, formLoginValues)
-            .then((data) => {
-               localStorage.setItem('accessToken', data?.data?.content.token.accessToken);
-               localStorage.setItem('refreshToken', data?.data?.content.token.refreshToken);
-               console.log(localStorage);
+            .then(({ data }) => {
+               localStorage.setItem('accessToken', data?.content.token.accessToken);
+               localStorage.setItem('refreshToken', data?.content.token.refreshToken);
+
                setIsLoginForm(false);
             })
-            .catch((error) => {
-              alert(error);
-            })
+          .catch((error) => alert(error?.response?.data?.message || 'Unknown error!'));
     }
 
     return (
