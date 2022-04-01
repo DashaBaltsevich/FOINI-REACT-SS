@@ -12,7 +12,7 @@ export const RegForm = ({ setIsRegForm }) => {
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
-        axios.post(`https://infinite-woodland-61407.herokuapp.com/api/sign-up`, formRegValues)
+        axios.post(`https://infinite-woodland-61407.herokuapp.com/api/v1/sign-up`, formRegValues)
             .then(({ data }) => {
                alert(data?.message || 'Registration succeeded!');
                setIsRegForm(false);

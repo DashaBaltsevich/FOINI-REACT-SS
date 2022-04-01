@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { AuthentificationContext } from '../../contexts/AuthentificationContext';
 import './LoginForm.scss';
 import axios from 'axios';
 
@@ -8,18 +9,28 @@ export const LoginForm = ({ setIsLoginForm }) => {
         password: '',
     })
 
+    const {state, authoriseDispatch} = useContext(AuthentificationContext);
+
+    console.log(authoriseDispatch, state)
+
     const handleFormSubmit = (event) => {
         event.preventDefault();
-        axios.post(`https://infinite-woodland-61407.herokuapp.com/api/sign-in`, formLoginValues)
+        
+        axios.post(`https://infinite-woodland-61407.herokuapp.com/api/v1/sign-in`, formLoginValues)
             .then(({ data }) => {
                localStorage.setItem('accessToken', data?.content.token.accessToken);
                localStorage.setItem('refreshToken', data?.content.token.refreshToken);
 
-               setIsLoginForm(false);
-            })
-          .catch((error) => alert(error?.response?.data?.message || 'Unknown error!'));
-    }
+               authoriseDispatch(true)
 
+               setIsLoginForm(false);
+
+            })
+          .catch((error) => {
+              alert(error?.response?.data?.message || 'Unknown error!');
+              console.log(error)
+          });
+    }
     return (
             <form className="f-login" method="POST" onSubmit={handleFormSubmit}>                
                 <label htmlFor="email" className="f-login__field-label">Почта:</label> 
