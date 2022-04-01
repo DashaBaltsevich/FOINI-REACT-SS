@@ -11,7 +11,6 @@ export const LoginForm = ({ setIsLoginForm }) => {
 
     const {state, authoriseDispatch} = useContext(AuthentificationContext);
 
-    console.log(authoriseDispatch, state)
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
@@ -21,15 +20,11 @@ export const LoginForm = ({ setIsLoginForm }) => {
                localStorage.setItem('accessToken', data?.content.token.accessToken);
                localStorage.setItem('refreshToken', data?.content.token.refreshToken);
 
-               authoriseDispatch(true)
-
+               authoriseDispatch(true);
                setIsLoginForm(false);
 
             })
-          .catch((error) => {
-              alert(error?.response?.data?.message || 'Unknown error!');
-              console.log(error)
-          });
+          .catch((error) => {alert(error?.response?.data?.message || 'Unknown error!');});
     }
     return (
             <form className="f-login" method="POST" onSubmit={handleFormSubmit}>                

@@ -21,7 +21,7 @@ export const SetAuthentificationContext = ({ children }) => {
 
     const authoriseDispatch = (isAuthorised) => {
         dispatch({
-            type: 'GET_ISAUTHORISED_TRUE',
+            type: 'GET_ISAUTHORIZED_TRUE',
             payload: isAuthorised,
         })
     }
