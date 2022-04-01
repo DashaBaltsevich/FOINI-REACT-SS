@@ -13,7 +13,7 @@ import './App.scss';
 function App() {
 
   const PrivateRoute = ({ children }) => {
-    const {state, isAuthorised} = useContext(AuthentificationContext);
+    const {state, authoriseDispatch} = useContext(AuthentificationContext);
     return state.isAuthorised ? children : null;
   }
 
