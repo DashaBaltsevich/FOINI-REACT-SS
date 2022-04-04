@@ -1,12 +1,15 @@
 @import '../../const.scss';
+
 .s-team {
-    background-color:rgb(248, 244, 238);
-    color: rgb(17, 17, 17);
-    min-height: calc(100vh - #{$header-height} - #{$footer-height});
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 40px 0;
     text-align: center;
+    background-color:rgb(248, 244, 238);
+    color: rgb(17, 17, 17);
+    min-height: calc(100vh - #{$header-height} - #{$footer-height});
+
     &__title {
         font-size: 36px;
         margin-bottom: 70px;
@@ -18,30 +21,34 @@
     display: flex;
     flex-wrap: wrap;
     margin: 0 calc(var(--extra-margin)*-1);
+
     &__card {
         width: 25%;
         padding: 0 var(--extra-margin);
     }
+
     &__cell {
         background-color: gray;
         padding-top: 10px;
         color: #fff;
         overflow: hidden;
         transition: transform 2s ease-out;
-        img {
-            border-right: 5px gray solid;
-            border-left: 5px gray solid;
-            width: 200px;
-        }
     }
+
     &__text-wrapper {
-        background-color: rgb(99, 98, 98);
         margin-top: 10px;
-        padding-top: 15px;
         padding: 15px 5px 0 5px;
+        background-color: rgb(99, 98, 98);
     }
+
     &__name {
         font-size: 18px;
+    }
+
+    &__photo {
+        width: 200px;
+        border-right: 5px gray solid;
+        border-left: 5px gray solid;
     }
 }
 

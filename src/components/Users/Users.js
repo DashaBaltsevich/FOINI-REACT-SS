@@ -1,27 +1,26 @@
 import { useEffect, useContext } from 'react';
-import { UsersContext } from '../../contexts/UsersContext';
 import axios from 'axios';
+import { UsersContext } from '../../contexts';
 import './Users.scss';
 
 export const Users = () => {
-
-    const {state: {users}, usersDispatch} = useContext(UsersContext);
+    const { state: { users }, actions: { onFetchUsersSuccess } } = useContext(UsersContext);
         
     useEffect(() => {
-        if(users.length) {
+        if (users.length) {
             return;
         }
 
         axios.get(`https://randomuser.me/api/?results=4`)
-            .then(({data}) => {
+            .then(({ data }) => {
                if(data?.results) {
-                   usersDispatch(data.results);
+                 onFetchUsersSuccess(data.results);
                }
             })
             .catch(() => {
               throw new Error('Error. No data');
             })
-    }, [users, usersDispatch]);
+    }, [users, onFetchUsersSuccess]);
 
     return (
         <section className="s-team">
@@ -31,7 +30,7 @@ export const Users = () => {
                     { users.map( user => (
                         <li className="l-team__card" key={user.name.first + user.name.last}>
                             <div className="l-team__cell">
-                                <img src={user.picture.large} alt={user.name.first + user.name.last} />
+                                <img className="l-team__photo" src={user.picture.large} alt={user.name.first + user.name.last} />
                                 <div className="l-team__text-wrapper">
                                     <h4 className="l-team__name">{user.name.first} {user.name.last}</h4>
                                     <p className="l-team__position">Photographer</p>

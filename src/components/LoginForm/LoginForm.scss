@@ -1,28 +1,26 @@
 .f-login {
     display: flex;
     flex-direction: column;
-    border: 1px red solid;
     padding: 20px 60px;
-}
+    border: 1px red solid;
 
-.f-login__field-label {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
+    &__field {
+        margin-bottom: 30px;
+        padding: 5px;
+        width: 200px;
+        height: 30px;
+        border: 1px yellow solid;
+        background-color: #fff;
 
-.f-login__field {
-    border: 1px yellow solid;
-    background-color: #fff;
-    width: 200px;
-    height: 30px;
-    font-size: 16px;
-    margin-bottom: 30px;
-    padding: 5px;
-}
+        &-label {
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+    }
 
-.btn-form-login {
-    border: 1px green solid;
-    color:#fff;
-    font-size: 16px;
-    padding: 20px 22px;
+    &__btn-submit {
+        padding: 20px 22px;
+        border: 1px green solid;
+        color: #fff;
+    }
 }

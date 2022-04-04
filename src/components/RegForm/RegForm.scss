@@ -3,26 +3,26 @@
     flex-direction: column;
     border: 1px red solid;
     padding: 20px 60px;
-}
 
-.f-registration__field-label {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
+    &__field-label {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
 
-.f-registration__field {
-    border: 1px yellow solid;
-    background-color: #fff;
-    width: 200px;
-    height: 30px;
-    font-size: 16px;
-    margin-bottom: 30px;
-    padding: 5px;
-}
+    &__field {
+        border: 1px yellow solid;
+        background-color: #fff;
+        width: 200px;
+        height: 30px;
+        font-size: 16px;
+        margin-bottom: 30px;
+        padding: 5px;
+    }
 
-.btn-form-registration {
-    border: 1px green solid;
-    color:#fff;
-    font-size: 16px;
-    padding: 20px 22px;
+    &__btn-submit {
+        border: 1px green solid;
+        color:#fff;
+        font-size: 16px;
+        padding: 20px 22px;
+    }
 }
