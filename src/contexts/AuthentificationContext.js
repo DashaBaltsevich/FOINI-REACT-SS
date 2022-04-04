@@ -7,7 +7,7 @@ const initialState = {
 };
 
 const reducer = (state, action) => {
-    if(action.type === 'GET_ISAUTHORIZED_TRUE') {
+    if(action.type === 'SET_AUTHORIZATION_STATE') {
         return {
             ...state,
             isAuthorised: action.payload,
@@ -21,7 +21,7 @@ export const SetAuthentificationContext = ({ children }) => {
 
     const authoriseDispatch = (isAuthorised) => {
         dispatch({
-            type: 'GET_ISAUTHORIZED_TRUE',
+            type: 'SET_AUTHORIZATION_STATE',
             payload: isAuthorised,
         })
     }

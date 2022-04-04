@@ -12,7 +12,7 @@ export const Header = () => {
     const [isLoginForm, setIsLoginForm] = useState(false);
     const [isReginForm, setIsRegForm] = useState(false);
 
-    const {state, isAuthorised} = useContext(AuthentificationContext);
+    const {state} = useContext(AuthentificationContext);
 
 
     return (
@@ -38,7 +38,12 @@ export const Header = () => {
                             </li>
                             </ul>
                         </nav>
-                        {!state.isAuthorised ?
+                        {state.isAuthorised ?
+                            <>
+                                <NavLink to='/me' className={setActive}>My account</NavLink>
+                                <button className="btn-login">Log Out</button>
+                            </>
+                            :
                             <div className="btn-login__wrapper">
                                 <button className="btn-login" onClick={() => {
                                     setIsLoginForm(true)
@@ -46,12 +51,7 @@ export const Header = () => {
                                 <button className="btn-login" onClick={() => {
                                     setIsRegForm(true)
                                 }}>Sign up</button>
-                            </div>
-                            : 
-                            <>
-                                <NavLink to='/me' className={setActive}>Me</NavLink>
-                                <button className="btn-login">Log Out</button>
-                            </>
+                            </div>                            
                         }
                         
                     </div>

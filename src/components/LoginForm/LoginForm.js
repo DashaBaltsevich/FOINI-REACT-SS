@@ -9,7 +9,7 @@ export const LoginForm = ({ setIsLoginForm }) => {
         password: '',
     })
 
-    const {state, authoriseDispatch} = useContext(AuthentificationContext);
+    const {authoriseDispatch} = useContext(AuthentificationContext);
 
 
     const handleFormSubmit = (event) => {
