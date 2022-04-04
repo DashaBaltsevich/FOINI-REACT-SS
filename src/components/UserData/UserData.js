@@ -1,6 +1,6 @@
 import './UserData.scss';
-export const UserData = () => {
 
+export const UserData = () => {
     return (
         <div className="s-userdata">
             <div className="container">

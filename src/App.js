@@ -6,6 +6,7 @@ import { Main } from './components/Main';
 import { UserData } from './components/UserData';
 import { Services } from './components/Services';
 import { Users } from './components/Users';
+import { PrivateRoute } from './components/PrivateRoute';
 import { AuthentificationContext } from './contexts/AuthentificationContext';
 import './App.scss';
 
@@ -13,10 +14,6 @@ import './App.scss';
 function App() {
 
   const {state} = useContext(AuthentificationContext);
-  
-  const PrivateRoute = ({ children }) => {
-    return state.isAuthorised ? children : <Navigate to='/' replace />;
-  }
 
   return (
     <div>
@@ -25,7 +22,10 @@ function App() {
               <Route path='/' element={<Main />}/>
               <Route path='services' element={<Services />} />
               <Route path='users' element={<Users />} />
-              <Route path='/me' element={<PrivateRoute><UserData /></PrivateRoute>} />
+              <Route path='/me' element={ state.isAuthorised ?
+              <PrivateRoute><UserData /></PrivateRoute> :
+              <Navigate to='/' replace />
+              } />
         </Routes>
         <Footer />
     </div>
