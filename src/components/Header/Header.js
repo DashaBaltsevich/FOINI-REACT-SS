@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ModalWindow } from '../ModalWindow/ModalWindow';
+import { AuthentificationContext } from '../../contexts/AuthentificationContext';
 import { LoginForm } from '../LoginForm/LoginForm';
 import { RegForm } from '../RegForm/RegForm';
 import './Header.scss';
@@ -10,6 +11,9 @@ export const Header = () => {
 
     const [isLoginForm, setIsLoginForm] = useState(false);
     const [isReginForm, setIsRegForm] = useState(false);
+
+    const {state} = useContext(AuthentificationContext);
+
 
     return (
         <>
@@ -34,21 +38,28 @@ export const Header = () => {
                             </li>
                             </ul>
                         </nav>
-                        <div className="btn-login__wrapper">
-                            <button className="btn-login" onClick={() => {
-                                setIsLoginForm(true)
-                            }}>Sign in</button>
-                            <button className="btn-login" onClick={() => {
-                                setIsRegForm(true)
-                            }}>Sign up</button>
-                        </div>
+                        {state.isAuthorised ?
+                            <>
+                                <NavLink to='/me' className={setActive}>My account</NavLink>
+                                <button className="btn-login">Log Out</button>
+                            </>
+                            :
+                            <div className="btn-login__wrapper">
+                                <button className="btn-login" onClick={() => {
+                                    setIsLoginForm(true)
+                                }}>Sign in</button>
+                                <button className="btn-login" onClick={() => {
+                                    setIsRegForm(true)
+                                }}>Sign up</button>
+                            </div>                            
+                        }
                         
                     </div>
                 </div>
             </header>
             {isLoginForm &&
                 <ModalWindow onClose={()=>{setIsLoginForm(false)}}>
-                    <LoginForm setIsLoginForm={setIsLoginForm}/>
+                    <LoginForm setIsLoginForm={setIsLoginForm} />
                 </ModalWindow>
             }
             {isReginForm &&

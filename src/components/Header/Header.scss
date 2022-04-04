@@ -10,7 +10,7 @@
   /*header*/
 .header {
   padding: 30px 0;
-  background-color: rgb(34, 34, 34);
+  background-color: $background-color-grey;
   height: $header-height;
   border-bottom: 1px #fff solid;
     &__inner {

@@ -5,13 +5,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { SetUserContext } from './contexts/UsersContext';
+import { SetAuthentificationContext } from './contexts/AuthentificationContext';
 
 ReactDOM.render(
   <React.StrictMode>
       <BrowserRouter>
-        <SetUserContext>
-          <App />
-        </SetUserContext>
+        <SetAuthentificationContext>
+          <SetUserContext>
+              <App />
+          </SetUserContext>
+        </SetAuthentificationContext>
       </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
