@@ -5,16 +5,17 @@
     background-color: $background-color-grey;
     padding-top: 100px;
 }
+
 .l-userdata {
     display: flex;
     flex-direction: column;
+
     &__item {
         color: #fff;
         font-size: 20px;
-    }
-    
-}
 
-.l-userdata__item:not(:last-child) {
-    margin-bottom: 15px;
+        & + & {
+            margin-top: 15px;
+        }
+    }
 }

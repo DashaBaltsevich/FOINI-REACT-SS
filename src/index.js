@@ -1,20 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import './index.css';
 import App from './App';
+import { UsersContextWrapper, AuthenticationContextWrapper } from './contexts';
 import reportWebVitals from './reportWebVitals';
-import { SetUserContext } from './contexts/UsersContext';
-import { SetAuthentificationContext } from './contexts/AuthentificationContext';
+import './index.scss';
 
 ReactDOM.render(
   <React.StrictMode>
       <BrowserRouter>
-        <SetAuthentificationContext>
-          <SetUserContext>
+         <AuthenticationContextWrapper>
+           <UsersContextWrapper>
               <App />
-          </SetUserContext>
-        </SetAuthentificationContext>
+           </UsersContextWrapper>
+         </AuthenticationContextWrapper>
       </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')

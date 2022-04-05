@@ -1,27 +1,22 @@
 @import '../../const.scss';
-
-.container {
-  width: 100%;
-  max-width: 998px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
   
-  /*header*/
+/*header*/
 .header {
   padding: 30px 0;
   background-color: $background-color-grey;
   height: $header-height;
   border-bottom: 1px #fff solid;
-    &__inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    &__logo {
-      flex-shrink: 0;
-      margin-right: 50px;
-    }
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__logo {
+    flex-shrink: 0;
+    margin-right: 50px;
+  }
 }
   
 .l-nav__item + .l-nav__item {

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './ModalWindow.scss';
 
 export const ModalWindow = ({ children, onClose }) => {
-
     const div = document.createElement('div');
 
     useEffect(() => {
@@ -16,9 +15,8 @@ export const ModalWindow = ({ children, onClose }) => {
     return ReactDOM.createPortal(
         <>
             {children}
-            <button onClick={onClose} className="btn-close-modal-window">Закрыть</button>
+            <button onClick={onClose} className="b-modal-window__btn-close">Закрыть</button>
         </>,
         div
-
     )
 }

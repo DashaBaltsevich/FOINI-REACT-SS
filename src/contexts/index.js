@@ -1,1 +1,2 @@
-export { UsersContext } from './UsersContext';
+export * from './UsersContext';
+export * from './AuthenticationContext';
