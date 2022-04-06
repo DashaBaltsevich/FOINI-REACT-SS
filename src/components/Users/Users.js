@@ -1,5 +1,5 @@
-import { useEffect, useContext } from 'react';
 import axios from 'axios';
+import { useEffect, useContext } from 'react';
 import { UsersContext } from '../../contexts';
 import './Users.scss';
 
