@@ -3,8 +3,11 @@ import { createContext, useReducer } from 'react'
 export const AuthenticationContext = createContext(null);
 
 const SET_AUTHORIZATION_STATE = 'SET_AUTHORIZATION_STATE';
+const SET_USER_INFORMATION = 'SET_USER_INFORMATION';
+
 const initialState = {
     isAuthorized: false,
+    userInformation: {},
 };
 
 const reducer = (state, action) => {
@@ -12,6 +15,11 @@ const reducer = (state, action) => {
         return {
             ...state,
             isAuthorized: action.payload,
+        }
+    } else if(action.type === SET_USER_INFORMATION) {
+        return {
+            ...state,
+            userInformation: action.payload,
         }
     }
 }
@@ -26,7 +34,14 @@ export const AuthenticationContextWrapper = ({ children }) => {
         })
     }
 
+    const setUserInformation = (userInformation) => {
+        dispatch({
+            type: SET_USER_INFORMATION,
+            payload: userInformation
+        })
+    }
+
     return (
-        <AuthenticationContext.Provider value={{ state, actions: { setAuthState } }} children={children} />
+        <AuthenticationContext.Provider value={{ state, actions: { setAuthState, setUserInformation } }} children={children} />
     );
 }
