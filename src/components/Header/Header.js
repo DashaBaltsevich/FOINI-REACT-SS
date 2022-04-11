@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import axios from 'axios';
 import { AuthenticationContext } from '../../contexts';
 import { ModalWindow, LoginForm, RegForm } from '..';
 import './Header.scss';
@@ -8,7 +9,18 @@ export const Header = () => {
     const setActive = ({ isActive }) => (isActive ? 'l-nav__link-active l-nav__link' : 'l-nav__link');
     const [isLoginFormVisible, setIsLoginFormVisible] = useState(false);
     const [isRegFormVisible, setIsRegFormVisible] = useState(false);
-    const { state: { isAuthorized } } = useContext(AuthenticationContext);
+    const { state: { isAuthorized }, actions: { setAuthState } } = useContext(AuthenticationContext);
+
+    const handleLogout = () => {
+        axios.post(`https://infinite-woodland-61407.herokuapp.com/api/v1/sign-out`, {
+            headers: {Authorization: `Bearer ${localStorage.accessToken}`}
+        })
+            .finally(() => {
+                setAuthState(false);
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+            })
+    };
 
     return (
         <>
@@ -37,7 +49,7 @@ export const Header = () => {
                         {isAuthorized ?
                           (<>
                                 <NavLink to="/me" className={setActive}>My account</NavLink>
-                                <button className="btn-login">Log Out</button>
+                                <button className="btn-login" onClick={handleLogout}>Log Out</button>
                             </>
                           )
                           :

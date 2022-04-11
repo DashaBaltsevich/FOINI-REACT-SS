@@ -14,6 +14,7 @@
     opacity: 0.9;
     text-align: center;
     will-change: transform;
+    overflow-y: auto;
 
     &__btn-close {
         font-size: 18px;

@@ -1,5 +1,6 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import axios from 'axios';
 import {
   Header,
   Footer,
@@ -13,7 +14,22 @@ import { AuthenticationContext } from './contexts';
 import './App.scss';
 
 function App() {
-  const { state: { isAuthorized } } = useContext(AuthenticationContext);
+
+  const { state: { isAuthorized }, actions: { setUserInformation, setAuthState }} = useContext(AuthenticationContext);
+
+  useEffect(() => {
+    if(localStorage?.accessToken?.length) {
+      axios.get('https://infinite-woodland-61407.herokuapp.com/api/v1/user', {
+        headers: {Authorization: `Bearer ${localStorage.accessToken}`}})
+            .then((data) => {
+                setUserInformation(data?.data.content);
+                setAuthState(true);
+            })
+            .catch(() => {
+                setAuthState(false);
+        })
+    }
+  }, [AuthenticationContext])
 
   return (
     <div>
