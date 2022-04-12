@@ -12,7 +12,7 @@ export const Header = () => {
     const { state: { isAuthorized }, actions: { setAuthState } } = useContext(AuthenticationContext);
 
     const handleLogout = () => {
-        axios.post(`https://infinite-woodland-61407.herokuapp.com/api/v1/sign-out`, {
+        axios.post(`https://infinite-woodland-61407.herokuapp.com/api/v1/sign-out`, null, {
             headers: {Authorization: `Bearer ${localStorage.accessToken}`}
         })
             .finally(() => {

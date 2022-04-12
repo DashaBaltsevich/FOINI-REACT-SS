@@ -18,18 +18,17 @@ function App() {
   const { state: { isAuthorized }, actions: { setUserInformation, setAuthState }} = useContext(AuthenticationContext);
 
   useEffect(() => {
-    if(localStorage?.accessToken?.length) {
+    if(localStorage.getItem('accessToken')) {
       axios.get('https://infinite-woodland-61407.herokuapp.com/api/v1/user', {
         headers: {Authorization: `Bearer ${localStorage.accessToken}`}})
             .then((data) => {
+              console.log(1)
                 setUserInformation(data?.data.content);
                 setAuthState(true);
             })
-            .catch(() => {
-                setAuthState(false);
-        })
     }
-  }, [AuthenticationContext])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div>
