@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import axios from 'axios';
+import { httpClient } from '../../api/httpClient';
 import { AuthenticationContext } from '../../contexts';
 import { ModalWindow, LoginForm, RegForm } from '..';
 import './Header.scss';
@@ -12,7 +12,7 @@ export const Header = () => {
     const { state: { isAuthorized }, actions: { setAuthState } } = useContext(AuthenticationContext);
 
     const handleLogout = () => {
-        axios.post(`https://infinite-woodland-61407.herokuapp.com/api/v1/sign-out`, null, {
+        httpClient.post(`sign-out`, {}, {
             headers: {Authorization: `Bearer ${localStorage.accessToken}`}
         })
             .finally(() => {

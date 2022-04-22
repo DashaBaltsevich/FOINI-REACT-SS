@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import axios from 'axios';
+import { httpClient } from '../../api/httpClient';
 import { AuthenticationContext } from '../../contexts';
 import './LoginForm.scss';
 
@@ -14,10 +14,10 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
             password: e.target.elements.password.value,
         };
 
-        axios.post(`https://infinite-woodland-61407.herokuapp.com/api/v1/sign-in`, body)
+        httpClient.post(`sign-in`, body)
             .then(({ data }) => {
-               localStorage.setItem('accessToken', data?.content.token.accessToken);
-               localStorage.setItem('refreshToken', data?.content.token.refreshToken);
+                localStorage.setItem('accessToken', data?.content.token.accessToken);
+                localStorage.setItem('refreshToken', data?.content.token.refreshToken);
 
                 setAuthState(true);
                 setIsLoginFormVisible(false);

@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import axios from 'axios';
+import { httpClient } from './api/httpClient';
 import {
   Header,
   Footer,
@@ -19,10 +19,8 @@ function App() {
 
   useEffect(() => {
     if(localStorage.getItem('accessToken')) {
-      axios.get('https://infinite-woodland-61407.herokuapp.com/api/v1/user', {
-        headers: {Authorization: `Bearer ${localStorage.accessToken}`}})
+      httpClient.get('user')
             .then((data) => {
-              console.log(1)
                 setUserInformation(data?.data.content);
                 setAuthState(true);
             })
