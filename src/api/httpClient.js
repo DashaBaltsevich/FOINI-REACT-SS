@@ -6,9 +6,24 @@ const httpClient = axios.create({
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.accessToken}`,
     },
   });
+
+
+httpClient.interceptors.request.use(
+
+  (config) => {
+    
+    const method = config.method;
+    const url = config.url;
+
+    if(method === 'get' && url === 'user' ||  url === 'sign-out') {
+      config.headers.common.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
+    }
+    return config;
+  }
+  
+)
 
 const resetTokens = async () => {
   const currentRefresh = localStorage.getItem('refreshToken');
@@ -38,7 +53,7 @@ const resetTokens = async () => {
 
 const resetTokenAndReattemptRequest = async (error) => {
   try {
-    const { response: { errorResponse }} = error;
+    const { response: errorResponse } = error;
     const accessToken = await resetTokens();
 
     if (accessToken.err) {
@@ -63,7 +78,6 @@ httpClient.interceptors.response.use(
     },
     (error) => {
       const needRefresh = error.response.data.content?.needRefresh;
-
       if (needRefresh) {
         return resetTokenAndReattemptRequest(error);
       }

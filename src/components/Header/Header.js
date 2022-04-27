@@ -12,9 +12,7 @@ export const Header = () => {
     const { state: { isAuthorized }, actions: { setAuthState } } = useContext(AuthenticationContext);
 
     const handleLogout = () => {
-        httpClient.post(`sign-out`, {}, {
-            headers: {Authorization: `Bearer ${localStorage.accessToken}`}
-        })
+        httpClient.post(`sign-out`, {})
             .finally(() => {
                 setAuthState(false);
                 localStorage.removeItem('accessToken');
