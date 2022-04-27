@@ -19,3 +19,41 @@
         }
     }
 }
+
+.f-edit {
+    color: #fff;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    &__field {
+        margin-left: 20px;
+        margin-bottom: 15px;
+        background-color: transparent;
+        color: #fff;
+        font-size: 18px;
+    }
+}
+
+.f-edit__field-label:nth-last-child(2) {
+    margin-top: 20px;
+}
+
+.btn-userdata-edit, .f-edit__btn-submit {
+    width: 170px;
+    margin-top: 20px;
+    font-size: 18px;
+    border: 1px green solid;
+    border-radius: 15px;
+    padding: 5px 20px;
+    color: #fff;
+    transition: color 1s;
+}
+
+.btn-userdata-edit:hover, .f-edit__btn-submit:hover {
+    color: green;
+}
+
+.f-edit-error-massage {
+    font-size: 10px;
+    color: red;
+}

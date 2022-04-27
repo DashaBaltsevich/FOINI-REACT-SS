@@ -17,7 +17,7 @@ httpClient.interceptors.request.use(
     const method = config.method;
     const url = config.url;
 
-    if(method === 'get' && url === 'user' ||  url === 'sign-out') {
+    if(method === 'get' && url === 'user' ||  url === 'sign-out' || method === 'patch' && url === 'user') {
       config.headers.common.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
     }
     return config;
