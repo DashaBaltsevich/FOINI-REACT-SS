@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { httpClient } from '../../api/httpClient';
 import './RegForm.scss';
 
 export const RegForm = ({ setIsRegFormVisible }) => {
@@ -12,7 +12,7 @@ export const RegForm = ({ setIsRegFormVisible }) => {
           password: e.target.elements.password.value,
         };
 
-        axios.post(`https://infinite-woodland-61407.herokuapp.com/api/v1/sign-up`, body)
+        httpClient.post(`sign-up`, body)
             .then(({ data }) => {
                 alert(data?.message || 'Registration succeeded!');
                 setIsRegFormVisible(false);

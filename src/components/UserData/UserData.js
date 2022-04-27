@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { httpClient } from '../../api/httpClient';
 import { useEffect, useContext } from 'react';
 import { AuthenticationContext } from '../../contexts';
 import './UserData.scss';
@@ -12,8 +12,7 @@ export const UserData = () => {
             return;
         }
 
-        axios.get('https://infinite-woodland-61407.herokuapp.com/api/v1/user', {
-        headers: {Authorization: `Bearer ${localStorage.accessToken}`}})
+        httpClient.get('user')
             .then((data) => {
                 setUserInformation(data?.data.content);
             })
