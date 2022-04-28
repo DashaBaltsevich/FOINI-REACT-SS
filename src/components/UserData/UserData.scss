@@ -19,3 +19,48 @@
         }
     }
 }
+
+.f-edit-userdata {
+    color: #fff;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+
+    &__field {
+        margin-left: 20px;
+        background-color: #fff;
+        font-size: 18px;
+
+        &-label {
+            & + & {
+                margin-top: 20px;
+            }
+            
+        }
+    }
+
+    &__btn-cancel {
+        margin-left: 50px;
+    }
+
+    &-error-massage {
+        margin-top: 10px;
+        font-size: 10px;
+        color: red;
+    }
+}
+
+.btn-userdata-edit, .f-edit-userdata__btn-submit, .f-edit-userdata__btn-cancel {
+    width: 170px;
+    margin-top: 20px;
+    font-size: 18px;
+    border: 1px green solid;
+    border-radius: 15px;
+    padding: 5px 20px;
+    color: #fff;
+    transition: color 1s;
+}
+
+.btn-userdata-edit:hover, .f-edit-userdata__btn-submit:hover, .f-edit-userdata__btn-cancel:hover {
+    color: green;
+}
