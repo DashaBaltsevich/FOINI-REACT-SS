@@ -20,25 +20,37 @@
     }
 }
 
-.f-edit {
+.f-edit-userdata {
     color: #fff;
     font-size: 20px;
     display: flex;
     flex-direction: column;
+
     &__field {
         margin-left: 20px;
-        margin-bottom: 15px;
-        background-color: transparent;
-        color: #fff;
+        background-color: #fff;
         font-size: 18px;
+
+        &-label {
+            & + & {
+                margin-top: 20px;
+            }
+            
+        }
+    }
+
+    &__btn-cancel {
+        margin-left: 50px;
+    }
+
+    &-error-massage {
+        margin-top: 10px;
+        font-size: 10px;
+        color: red;
     }
 }
 
-.f-edit__field-label:nth-last-child(2) {
-    margin-top: 20px;
-}
-
-.btn-userdata-edit, .f-edit__btn-submit {
+.btn-userdata-edit, .f-edit-userdata__btn-submit, .f-edit-userdata__btn-cancel {
     width: 170px;
     margin-top: 20px;
     font-size: 18px;
@@ -49,11 +61,6 @@
     transition: color 1s;
 }
 
-.btn-userdata-edit:hover, .f-edit__btn-submit:hover {
+.btn-userdata-edit:hover, .f-edit-userdata__btn-submit:hover, .f-edit-userdata__btn-cancel:hover {
     color: green;
-}
-
-.f-edit-error-massage {
-    font-size: 10px;
-    color: red;
 }
