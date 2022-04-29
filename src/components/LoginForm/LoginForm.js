@@ -1,10 +1,23 @@
 import { useContext } from 'react';
 import { httpClient } from '../../api/httpClient';
 import { AuthenticationContext } from '../../contexts';
+import { useAsync } from '../../hooks'
+import { signIn } from '../../api/facades';
 import './LoginForm.scss';
 
 export const LoginForm = ({ setIsLoginFormVisible }) => {
     const { actions: { setAuthState } } = useContext(AuthenticationContext);
+    const { execute, value, error, loading } = useAsync(
+      signIn,
+      [],
+      [],
+      false,
+    )
+
+      /* first arg: async function */
+      /* second argument: async func args in array */
+      /* third argument: dependencies in array */
+      /* fourth argument: immediate flag which is true by default */
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -14,16 +27,17 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
             password: e.target.elements.password.value,
         };
 
-        httpClient.post(`sign-in`, body)
-            .then(({ data }) => {
-                localStorage.setItem('accessToken', data?.content.token.accessToken);
-                localStorage.setItem('refreshToken', data?.content.token.refreshToken);
+        const data = execute(body);
 
-                setAuthState(true);
-                setIsLoginFormVisible(false);
-            })
-            .catch((error) => alert(error?.response?.data?.message || error?.message || 'Unknown error!')
-        );
+        if (error) {
+            // return alert(error?.response?.data?.message || error?.message || 'Unknown error!')
+        }
+
+        localStorage.setItem('accessToken', data?.content.token.accessToken);
+        localStorage.setItem('refreshToken', data?.content.token.refreshToken);
+
+        setAuthState(true);
+        setIsLoginFormVisible(false);
     }
 
     return (
