@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { httpClient } from '../../api/httpClient';
 import { AuthenticationContext } from '../../contexts';
 import { useAsync } from '../../hooks'
 import { signIn } from '../../api/facades';
@@ -29,12 +28,15 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
 
         const data = execute(body);
 
+        console.log(data)
+
+
         if (error) {
-            // return alert(error?.response?.data?.message || error?.message || 'Unknown error!')
+            return alert(error?.response?.data?.message || error?.message || 'Unknown error!')
         }
 
-        localStorage.setItem('accessToken', data?.content.token.accessToken);
-        localStorage.setItem('refreshToken', data?.content.token.refreshToken);
+        // localStorage.setItem('accessToken', data?.content.token.accessToken);
+        // localStorage.setItem('refreshToken', data?.content.token.refreshToken);
 
         setAuthState(true);
         setIsLoginFormVisible(false);

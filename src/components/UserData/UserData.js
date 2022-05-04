@@ -14,14 +14,14 @@ export const UserData = () => {
             return;
         }
 
-        httpClient.get('user')
-            .then((data) => {
-                setUserInformation(data?.data.content);
-            })
-            .catch((error) => {
-                setAuthState(false);
-                alert(error?.response?.data?.message || error?.message || 'Unknown error!');
-        })
+        // httpClient.get('user')
+        //     .then((data) => {
+        //         setUserInformation(data?.data.content);
+        //     })
+        //     .catch((error) => {
+        //         setAuthState(false);
+        //         alert(error?.response?.data?.message || error?.message || 'Unknown error!');
+        // })
     }, [userInformation, setUserInformation, setAuthState])
 
     const handleEditionFormSubmit = (e) => {

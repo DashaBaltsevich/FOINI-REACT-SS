@@ -18,13 +18,13 @@ function App() {
   const { state: { isAuthorized }, actions: { setUserInformation, setAuthState }} = useContext(AuthenticationContext);
 
   useEffect(() => {
-    if(localStorage.getItem('accessToken')) {
-      httpClient.get('user')
-            .then((data) => {
-                setUserInformation(data?.data.content);
-                setAuthState(true);
-            })
-    }
+    // if(localStorage.getItem('accessToken')) {
+    //   httpClient.get('user')
+    //         .then((data) => {
+    //             setUserInformation(data?.data.content);
+    //             setAuthState(true);
+    //         })
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
