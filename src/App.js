@@ -15,29 +15,53 @@ import { AuthenticationContext } from './contexts';
 import './App.scss';
 
 function App() {
-
   const { state: { isAuthorized }, actions: { setUserInformation, setAuthState }} = useContext(AuthenticationContext);
-  const { execute, value, error, loading} = useAsync(
+  const { execute, loading } = useAsync(
     getUserData,
     [],
     [],
-    true,
+    false,
   );
 
   useEffect(() => {
-    if(localStorage.getItem('accessToken')) {
-
-      execute();
-
-      if(value) {
-        console.log(value)
-        setUserInformation(value?.content);
-        setAuthState(true);
-      }
-
+    if (!localStorage.getItem('accessToken')) {
+      return;
     }
+
+    (async () => {
+      try {
+        const data = await execute();
+
+        setUserInformation(data?.content);
+        setAuthState(true);
+      } catch (err) {
+
+      }
+    })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const css = `
+    @keyframes appearance {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .test {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      position: fixed;
+      bottom: 0;
+      text-align: center;
+      background-color: rgba(11, 255, 0, .1);
+      animation: appearance .2s ease-in both;
+      opacity: 0;
+    }
+  `;
 
   return (
     <div>
@@ -52,6 +76,16 @@ function App() {
           </PrivateRoute>
         }/>
       </Routes>
+      {/*<Preloader/>*/}
+
+      <style>
+        {css}
+      </style>
+      { loading ? (
+        <div className="test">
+          <img src="./img/next-episode.gif" alt="Preloader"/>
+        </div>
+      ): null }
       <Footer />
     </div>
   )

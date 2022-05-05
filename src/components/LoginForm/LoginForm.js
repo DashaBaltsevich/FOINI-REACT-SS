@@ -6,17 +6,12 @@ import './LoginForm.scss';
 
 export const LoginForm = ({ setIsLoginFormVisible }) => {
     const { actions: { setAuthState } } = useContext(AuthenticationContext);
-    const { execute, value, error, loading } = useAsync(
+    const { execute, loading } = useAsync(
       signIn,
       [],
       [],
       false,
     )
-
-      /* first arg: async function */
-      /* second argument: async func args in array */
-      /* third argument: dependencies in array */
-      /* fourth argument: immediate flag which is true by default */
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -26,19 +21,18 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
             password: e.target.elements.password.value,
         };
 
-        const data = await execute(body);
+        try {
+            const data = await execute(body);
 
-        if (error) {
-          return alert(error?.response?.data?.message || error?.message || 'Unknown error!')
+            setAuthState(true);
+            setIsLoginFormVisible(false);
+            localStorage.setItem('accessToken', data?.content.token.accessToken);
+            localStorage.setItem('refreshToken', data?.content.token.refreshToken);
+        } catch (err) {
+            // TODO: Check the error object
+            console.log(err);
+            return alert(err?.response?.data?.message || err?.message || 'Unknown error!')
         }
-  
-        if (data) {
-          setAuthState(true);
-          setIsLoginFormVisible(false);
-        }
-        
-        localStorage.setItem('accessToken', data?.content.token.accessToken);
-        localStorage.setItem('refreshToken', data?.content.token.refreshToken);
     }
 
     return (

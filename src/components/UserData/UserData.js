@@ -9,13 +9,14 @@ export const UserData = () => {
     const { state: {userInformation}, actions: { setUserInformation, setAuthState }} = useContext(AuthenticationContext);
     const [isEditingEnable, setIsEditingEnable] = useState(false);
     const [isPasswordEmpty, setIsPasswordEmpty] = useState(false);
-    const { execute: getUser, value: gottenValue, error: userGetError, loading: userGetLoading } = useAsync(
+
+    const { execute: getUser, loading: userGetLoading } = useAsync(
         getUserData,
         [],
         [],
         false,
       );
-    const { execute: updateUser, value: updatedValue, error: userUpdateError, loading: userUpdateLoading } = useAsync(
+    const { execute: updateUser, value: updatedUserData, error: userUpdateError, loading: userUpdateLoading } = useAsync(
         updateUserData,
         [],
         [],
@@ -23,23 +24,20 @@ export const UserData = () => {
     );
 
     useEffect(() => {
+        (async () => {
+            if (userInformation !== null) {
+                return;
+            }
 
-        if (userInformation !== null) {
-            return;
-        }
-
-        getUser();
-
-        if (userGetError) {
-            setAuthState(false);
-            alert(userGetError?.response?.data?.message || userGetError?.message || 'Unknown error!');
-        }
-
-        if(gottenValue) {
-            setUserInformation(gottenValue?.content);
-        }
-
-    }, [userInformation, setUserInformation, setAuthState, userGetError, gottenValue])
+            try {
+               const data = await getUser();
+               setUserInformation(data?.content);
+            } catch (err) {
+                setAuthState(false);
+                alert(err?.response?.data?.message || err?.message || 'Unknown error!');
+            }
+        })();
+    }, [userInformation, setUserInformation, setAuthState, getUser])
 
     const handleEditionFormSubmit = (e) => {
         e.preventDefault();
@@ -63,8 +61,8 @@ export const UserData = () => {
                 alert(userUpdateError?.response?.data?.message || userUpdateError?.message || 'Unknown error!')
             }
             
-            if(updatedValue) {
-                setUserInformation(updatedValue?.content);
+            if (updatedUserData) {
+                setUserInformation(updatedUserData?.content);
                 setIsEditingEnable(false);
                 setIsPasswordEmpty(false);
             }

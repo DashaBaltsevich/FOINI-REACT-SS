@@ -20,14 +20,12 @@ export const Header = () => {
         false,
       )
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await execute()
 
-        execute()
-            .finally(() => {
-                setAuthState(false);
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('refreshToken');
-            })
+        setAuthState(false);
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
     };
 
     return (
