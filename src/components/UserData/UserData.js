@@ -1,4 +1,6 @@
-import { httpClient } from '../../api/httpClient';
+import { useAsync } from '../../hooks'
+import { getUserData } from '../../api/facades';
+import { updateUserData } from '../../api/facades';
 import { useEffect, useContext, useState } from 'react';
 import { AuthenticationContext } from '../../contexts';
 import './UserData.scss';
@@ -7,6 +9,18 @@ export const UserData = () => {
     const { state: {userInformation}, actions: { setUserInformation, setAuthState }} = useContext(AuthenticationContext);
     const [isEditingEnable, setIsEditingEnable] = useState(false);
     const [isPasswordEmpty, setIsPasswordEmpty] = useState(false);
+    const { execute: getUser, value: gottenValue, error: userGetError, loading: userGetLoading } = useAsync(
+        getUserData,
+        [],
+        [],
+        false,
+      );
+    const { execute: updateUser, value: updatedValue, error: userUpdateError, loading: userUpdateLoading } = useAsync(
+        updateUserData,
+        [],
+        [],
+        false,
+    );
 
     useEffect(() => {
 
@@ -14,15 +28,18 @@ export const UserData = () => {
             return;
         }
 
-        // httpClient.get('user')
-        //     .then((data) => {
-        //         setUserInformation(data?.data.content);
-        //     })
-        //     .catch((error) => {
-        //         setAuthState(false);
-        //         alert(error?.response?.data?.message || error?.message || 'Unknown error!');
-        // })
-    }, [userInformation, setUserInformation, setAuthState])
+        getUser();
+
+        if (userGetError) {
+            setAuthState(false);
+            alert(userGetError?.response?.data?.message || userGetError?.message || 'Unknown error!');
+        }
+
+        if(gottenValue) {
+            setUserInformation(gottenValue?.content);
+        }
+
+    }, [userInformation, setUserInformation, setAuthState, userGetError, gottenValue])
 
     const handleEditionFormSubmit = (e) => {
         e.preventDefault();
@@ -40,70 +57,77 @@ export const UserData = () => {
 
         if(body.password !== '') {
 
-            httpClient.patch(`user`, body)
-                .then(({ data }) => {
-                    setUserInformation(data?.content);
-                    setIsEditingEnable(false);
-                    setIsPasswordEmpty(false);
-                })
-                .catch((error) => {
-                    alert(error?.response?.data?.message || error?.message || 'Unknown error!')
-                }
-            );
+            updateUser(body);
+
+            if(userUpdateError) {
+                alert(userUpdateError?.response?.data?.message || userUpdateError?.message || 'Unknown error!')
+            }
+            
+            if(updatedValue) {
+                setUserInformation(updatedValue?.content);
+                setIsEditingEnable(false);
+                setIsPasswordEmpty(false);
+            }
+            
         } else {
             setIsPasswordEmpty(true);
+            return;
         }
     }
 
 
     return (
-        <div className="s-userdata">
-            <div className="container">
-            {
-                isEditingEnable ? 
-                <form
-                    className="f-edit-userdata"
-                    method="POST"
-                    onSubmit={handleEditionFormSubmit}
-                >
-                    <label className="f-edit-userdata__field-label">Имя:
-                    <input type="text" name="first_name" className="f-edit-userdata__field" />
-                    </label>
+            (userGetLoading || userUpdateLoading) ? <p>Loading...</p>
+            :
+            <div className="s-userdata">
+                <div className="container">
+                {
+                    isEditingEnable ? 
+                    <form
+                        className="f-edit-userdata"
+                        method="POST"
+                        onSubmit={handleEditionFormSubmit}
+                    >
+                        <label className="f-edit-userdata__field-label">Имя:
+                        <input type="text" name="first_name" className="f-edit-userdata__field" />
+                        </label>
 
-                    <label className="f-edit-userdata__field-label">Фамилия:
-                    <input type="text" name="last_name" className="f-edit-userdata__field" />
-                    </label>
+                        <label className="f-edit-userdata__field-label">Фамилия:
+                        <input type="text" name="last_name" className="f-edit-userdata__field" />
+                        </label>
 
-                    <label className="f-edit-userdata__field-label">Почта:
-                    <input type="email" name="email" className="f-edit-userdata__field" />
-                    </label>
+                        <label className="f-edit-userdata__field-label">Почта:
+                        <input type="email" name="email" className="f-edit-userdata__field" />
+                        </label>
 
-                    <label className="f-edit-userdata__field-label">Введите пароль:
-                    <input type="password" name="password" className="f-edit-userdata__field" />
-                    </label>
-                    {isPasswordEmpty ? <p className="f-edit-userdata-error-massage">Пароль должен быть введен</p> : null}
+                        <label className="f-edit-userdata__field-label">Введите пароль:
+                        <input type="password" name="password" className="f-edit-userdata__field" />
+                        </label>
+                        {isPasswordEmpty ? <p className="f-edit-userdata-error-massage">Пароль должен быть введен</p> : null}
+                        
+                        <div>
+                        <button className="f-edit-userdata__btn-submit">Сохранить</button>
+                            <button className="f-edit-userdata__btn-cancel" onClick={(e) => {
+                                e.preventDefault();
+                                setIsEditingEnable(false);
+                            }}>Отмена</button> 
+                        </div>
+                        
+                    </form>
+                    : 
+                    <>
+                        <ul className="l-userdata">
+                            <li className="l-userdata__item">Имя: {userInformation?.firstName}</li>
+                            <li className="l-userdata__item">Фамилия: {userInformation?.lastName}</li>
+                            <li className="l-userdata__item">Почта: {userInformation?.email}</li>
+                        </ul>
+                        <button className="btn-userdata-edit" onClick={() => setIsEditingEnable(true)}>Редактировать</button>
+                    </>
+                }
                     
-                    <div>
-                       <button className="f-edit-userdata__btn-submit">Сохранить</button>
-                        <button className="f-edit-userdata__btn-cancel" onClick={(e) => {
-                            e.preventDefault();
-                            setIsEditingEnable(false);
-                        }}>Отмена</button> 
-                    </div>
-                    
-                </form>
-                : 
-                <>
-                    <ul className="l-userdata">
-                        <li className="l-userdata__item">Имя: {userInformation?.firstName}</li>
-                        <li className="l-userdata__item">Фамилия: {userInformation?.lastName}</li>
-                        <li className="l-userdata__item">Почта: {userInformation?.email}</li>
-                    </ul>
-                    <button className="btn-userdata-edit" onClick={() => setIsEditingEnable(true)}>Редактировать</button>
-                </>
-            }
-                
+                </div>
             </div>
-        </div>
+        
+
     );
 }

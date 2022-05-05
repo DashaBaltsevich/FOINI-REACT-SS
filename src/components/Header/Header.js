@@ -1,6 +1,8 @@
 import { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { httpClient } from '../../api/httpClient';
+import { useAsync } from '../../hooks'
+import { signOut } from '../../api/facades';
 import { AuthenticationContext } from '../../contexts';
 import { ModalWindow, LoginForm, RegForm } from '..';
 import './Header.scss';
@@ -11,8 +13,16 @@ export const Header = () => {
     const [isRegFormVisible, setIsRegFormVisible] = useState(false);
     const { state: { isAuthorized }, actions: { setAuthState } } = useContext(AuthenticationContext);
 
+    const { execute, value, error, loading } = useAsync(
+        signOut,
+        [],
+        [],
+        false,
+      )
+
     const handleLogout = () => {
-        httpClient.post(`sign-out`, {})
+
+        execute()
             .finally(() => {
                 setAuthState(false);
                 localStorage.removeItem('accessToken');

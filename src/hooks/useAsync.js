@@ -9,34 +9,36 @@ export const useAsync = (
 ) => {
   
   const [value, setValue] = useState(null);
-  const [loading, setLoading] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const execute = useCallback((body) => {
+  const execute = useCallback((...body) => {
 
-    setLoading("loading");
+    setLoading(true);
     setValue(null);
     setError(null);
 
 
-    return asyncFunc(body)
+    return asyncFunc(...(body.length ? body : args))
       .then((response) => {
-        console.log(response);
+        setLoading(true);
         setValue(response);
-        console.log(value)
-
+        return response;
       })
       .catch((error) => {
+        setLoading(false);
         setError(error);
-
+      })
+      .finally (() => {
+        setLoading(false);
       });
-  }, [asyncFunc, value]);
+  }, [asyncFunc]);
 
   useEffect(() => {
     if(immediate) {
-      execute();
+      execute(...args);
     } 
-  }, [execute, immediate])
+  }, [execute, immediate, ...deps])
 
   return {
     value,

@@ -1,6 +1,7 @@
+import { useAsync } from './hooks'
+import { getUserData } from './api/facades';
 import { useContext, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { httpClient } from './api/httpClient';
 import {
   Header,
   Footer,
@@ -16,15 +17,25 @@ import './App.scss';
 function App() {
 
   const { state: { isAuthorized }, actions: { setUserInformation, setAuthState }} = useContext(AuthenticationContext);
+  const { execute, value, error, loading} = useAsync(
+    getUserData,
+    [],
+    [],
+    true,
+  );
 
   useEffect(() => {
-    // if(localStorage.getItem('accessToken')) {
-    //   httpClient.get('user')
-    //         .then((data) => {
-    //             setUserInformation(data?.data.content);
-    //             setAuthState(true);
-    //         })
-    // }
+    if(localStorage.getItem('accessToken')) {
+
+      execute();
+
+      if(value) {
+        console.log(value)
+        setUserInformation(value?.content);
+        setAuthState(true);
+      }
+
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

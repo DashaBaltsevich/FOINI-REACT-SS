@@ -18,7 +18,7 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
       /* third argument: dependencies in array */
       /* fourth argument: immediate flag which is true by default */
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
 
         const body = {
@@ -26,20 +26,19 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
             password: e.target.elements.password.value,
         };
 
-        const data = execute(body);
-
-        console.log(data)
-
+        const data = await execute(body);
 
         if (error) {
-            return alert(error?.response?.data?.message || error?.message || 'Unknown error!')
+          return alert(error?.response?.data?.message || error?.message || 'Unknown error!')
         }
-
-        // localStorage.setItem('accessToken', data?.content.token.accessToken);
-        // localStorage.setItem('refreshToken', data?.content.token.refreshToken);
-
-        setAuthState(true);
-        setIsLoginFormVisible(false);
+  
+        if (data) {
+          setAuthState(true);
+          setIsLoginFormVisible(false);
+        }
+        
+        localStorage.setItem('accessToken', data?.content.token.accessToken);
+        localStorage.setItem('refreshToken', data?.content.token.refreshToken);
     }
 
     return (
