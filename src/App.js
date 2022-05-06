@@ -1,6 +1,8 @@
+import { useAsync } from './hooks'
+import { getUserData } from './api/facades';
+import { Preloader } from './components/Preloader';
 import { useContext, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { httpClient } from './api/httpClient';
 import {
   Header,
   Footer,
@@ -14,19 +16,32 @@ import { AuthenticationContext } from './contexts';
 import './App.scss';
 
 function App() {
-
   const { state: { isAuthorized }, actions: { setUserInformation, setAuthState }} = useContext(AuthenticationContext);
+  const { execute, loading } = useAsync(
+    getUserData,
+    [],
+    [],
+    false,
+  );
 
   useEffect(() => {
-    if(localStorage.getItem('accessToken')) {
-      httpClient.get('user')
-            .then((data) => {
-                setUserInformation(data?.data.content);
-                setAuthState(true);
-            })
+    if (!localStorage.getItem('accessToken')) {
+      return;
     }
+
+    (async () => {
+      try {
+        const data = await execute();
+
+        setUserInformation(data?.content);
+        setAuthState(true);
+      } catch (err) {
+
+      }
+    })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
 
   return (
     <div>
@@ -41,6 +56,9 @@ function App() {
           </PrivateRoute>
         }/>
       </Routes>
+      { loading ? (
+        <Preloader/>
+      ): null }
       <Footer />
     </div>
   )
