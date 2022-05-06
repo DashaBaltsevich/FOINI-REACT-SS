@@ -8,8 +8,12 @@ export const ModalWindow = ({ children, onClose }) => {
     useEffect(() => {
         div.setAttribute('class', 'b-modal-window');
         document.body.appendChild(div);
+        document.querySelector('body').style.overflow = 'hidden';
 
-        return () => div.remove();
+        return () => {
+            div.remove();
+            document.querySelector('body').style.overflow = 'auto';
+        }
     }, [div])
 
     return ReactDOM.createPortal(
