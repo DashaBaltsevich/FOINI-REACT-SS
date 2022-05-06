@@ -1,6 +1,7 @@
 import { useAsync } from '../../hooks'
 import { getUserData } from '../../api/facades';
 import { updateUserData } from '../../api/facades';
+import { Preloader } from '../Preloader';
 import { useEffect, useContext, useState } from 'react';
 import { AuthenticationContext } from '../../contexts';
 import './UserData.scss';
@@ -16,7 +17,7 @@ export const UserData = () => {
         [],
         false,
       );
-    const { execute: updateUser, value: updatedUserData, error: userUpdateError, loading: userUpdateLoading } = useAsync(
+    const { execute: updateUser, loading: userUpdateLoading } = useAsync(
         updateUserData,
         [],
         [],
@@ -39,7 +40,7 @@ export const UserData = () => {
         })();
     }, [userInformation, setUserInformation, setAuthState, getUser])
 
-    const handleEditionFormSubmit = (e) => {
+    const handleEditionFormSubmit = async (e) => {
         e.preventDefault();
 
         const body = {
@@ -55,16 +56,14 @@ export const UserData = () => {
 
         if(body.password !== '') {
 
-            updateUser(body);
+            try {
+                const data = await updateUser(body);
 
-            if(userUpdateError) {
-                alert(userUpdateError?.response?.data?.message || userUpdateError?.message || 'Unknown error!')
-            }
-            
-            if (updatedUserData) {
-                setUserInformation(updatedUserData?.content);
+                setUserInformation(data?.content);
                 setIsEditingEnable(false);
                 setIsPasswordEmpty(false);
+            } catch (error) {
+                return alert(error?.response?.data?.message || error?.message || 'Unknown error!')
             }
             
         } else {
@@ -75,7 +74,7 @@ export const UserData = () => {
 
 
     return (
-            (userGetLoading || userUpdateLoading) ? <p>Loading...</p>
+            (userGetLoading || userUpdateLoading) ? <Preloader/>
             :
             <div className="s-userdata">
                 <div className="container">

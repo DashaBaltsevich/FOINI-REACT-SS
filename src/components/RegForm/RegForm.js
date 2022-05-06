@@ -1,8 +1,17 @@
-import { httpClient } from '../../api/httpClient';
+import { useAsync } from '../../hooks';
+import { signUp } from '../../api/facades';
 import './RegForm.scss';
+import { Preloader } from '../Preloader';
 
 export const RegForm = ({ setIsRegFormVisible }) => {
-    const handleFormSubmit = (e) => {
+    const { execute, loading } = useAsync(
+        signUp,
+        [],
+        [],
+        false,
+      );
+
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
 
         const body = {
@@ -12,16 +21,21 @@ export const RegForm = ({ setIsRegFormVisible }) => {
           password: e.target.elements.password.value,
         };
 
-        httpClient.post(`sign-up`, body)
-            .then(({ data }) => {
-                alert(data?.message || 'Registration succeeded!');
-                setIsRegFormVisible(false);
-            })
-            .catch((error) => alert(error?.response?.data?.message  || error?.message || 'Unknown error!')
-        )
+        try {
+            const data = await execute(body);
+
+            console.log(data, body.email);
+            alert(data?.message || 'Registration succeeded!');
+            setIsRegFormVisible(false);
+        } catch (error) {
+            alert(error?.response?.data?.message  || error?.message || 'Unknown error!');
+            console.dir(error);
+        }
     }
 
     return (
+        loading ? <Preloader />
+        :
         <form className="f-registration" method="POST" onSubmit={handleFormSubmit}>
             <label htmlFor="first_name" className="f-registration__field-label">Имя:</label>
             <input type="text" id="first_name" name="first_name" className="f-registration__field" />

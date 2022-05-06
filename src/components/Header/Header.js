@@ -1,10 +1,10 @@
 import { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { httpClient } from '../../api/httpClient';
 import { useAsync } from '../../hooks'
 import { signOut } from '../../api/facades';
 import { AuthenticationContext } from '../../contexts';
 import { ModalWindow, LoginForm, RegForm } from '..';
+import { Preloader } from '../Preloader';
 import './Header.scss';
 
 export const Header = () => {
@@ -13,7 +13,7 @@ export const Header = () => {
     const [isRegFormVisible, setIsRegFormVisible] = useState(false);
     const { state: { isAuthorized }, actions: { setAuthState } } = useContext(AuthenticationContext);
 
-    const { execute, value, error, loading } = useAsync(
+    const { execute, loading } = useAsync(
         signOut,
         [],
         [],
@@ -21,7 +21,7 @@ export const Header = () => {
       )
 
     const handleLogout = async () => {
-        await execute()
+        await execute();
 
         setAuthState(false);
         localStorage.removeItem('accessToken');
@@ -29,6 +29,8 @@ export const Header = () => {
     };
 
     return (
+        loading ? <Preloader />
+        :
         <>
             <header className="header">
                 <div className="container">

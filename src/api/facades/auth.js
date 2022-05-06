@@ -1,5 +1,10 @@
 import { httpClient } from '../httpClient';
 
+export const signUp = async (body) => {
+  const { data } = await httpClient.post(`sign-up`, body);
+  return data;
+}
+
 export const signIn = async (body) => {
   const { data } = await httpClient.post(`sign-in`, body);
   return data;

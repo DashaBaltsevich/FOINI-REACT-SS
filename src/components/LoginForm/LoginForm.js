@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { AuthenticationContext } from '../../contexts';
-import { useAsync } from '../../hooks'
+import { useAsync } from '../../hooks';
+import { Preloader } from '../Preloader';
 import { signIn } from '../../api/facades';
 import './LoginForm.scss';
 
@@ -29,13 +30,13 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
             localStorage.setItem('accessToken', data?.content.token.accessToken);
             localStorage.setItem('refreshToken', data?.content.token.refreshToken);
         } catch (err) {
-            // TODO: Check the error object
-            console.log(err);
             return alert(err?.response?.data?.message || err?.message || 'Unknown error!')
         }
     }
 
     return (
+        loading ? <Preloader />
+        :
         <form
           className="f-login"
           method="POST"
