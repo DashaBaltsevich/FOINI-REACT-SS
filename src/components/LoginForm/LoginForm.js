@@ -35,20 +35,23 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
     }
 
     return (
-        loading ? <Preloader />
-        :
-        <form
-          className="f-login"
-          method="POST"
-          onSubmit={handleFormSubmit}
-        >
-            <label htmlFor="email" className="f-login__field-label">Почта:</label>
-            <input type="email" id="email" name="email" className="f-login__field" />
+        <>
+            {loading && <Preloader />}
+            
+            <form
+            className="f-login"
+            method="POST"
+            onSubmit={handleFormSubmit}
+            >
+                <label htmlFor="email" className="f-login__field-label">Почта:</label>
+                <input type="email" id="email" name="email" className="f-login__field" />
 
-            <label htmlFor="password" className="f-login__field-label">Пароль:</label>
-            <input type="password" id="password" name="password" className="f-login__field" />
+                <label htmlFor="password" className="f-login__field-label">Пароль:</label>
+                <input type="password" id="password" name="password" className="f-login__field" />
 
-            <button type="submit" className="f-login__btn-submit">Войти</button>
-        </form>
+                <button type="submit" className="f-login__btn-submit">Войти</button>
+            </form>
+        </>
+    
     );
 };

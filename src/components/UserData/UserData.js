@@ -1,4 +1,4 @@
-import { useAsync } from '../../hooks'
+import { useAsync } from '../../hooks';
 import { getUserData } from '../../api/facades';
 import { updateUserData } from '../../api/facades';
 import { Preloader } from '../Preloader';

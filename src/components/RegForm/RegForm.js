@@ -34,22 +34,24 @@ export const RegForm = ({ setIsRegFormVisible }) => {
     }
 
     return (
-        loading ? <Preloader />
-        :
-        <form className="f-registration" method="POST" onSubmit={handleFormSubmit}>
-            <label htmlFor="first_name" className="f-registration__field-label">Имя:</label>
-            <input type="text" id="first_name" name="first_name" className="f-registration__field" />
+        <> 
+            {loading && <Preloader />}
+            
+            <form className="f-registration" method="POST" onSubmit={handleFormSubmit}>
+                <label htmlFor="first_name" className="f-registration__field-label">Имя:</label>
+                <input type="text" id="first_name" name="first_name" className="f-registration__field" />
 
-            <label htmlFor="last_name" className="f-registration__field-label">Фамилия:</label>
-            <input type="text" id="last_name" name="last_name" className="f-registration__field" />
+                <label htmlFor="last_name" className="f-registration__field-label">Фамилия:</label>
+                <input type="text" id="last_name" name="last_name" className="f-registration__field" />
 
-            <label htmlFor="email" className="f-registration__field-label">Почта:</label>
-            <input type="email" id="email" name="email" className="f-registration__field" />
+                <label htmlFor="email" className="f-registration__field-label">Почта:</label>
+                <input type="email" id="email" name="email" className="f-registration__field" />
 
-            <label htmlFor="password" className="f-registration__field-label">Пароль:</label>
-            <input type="password" id="password" name="password" className="f-registration__field" />
+                <label htmlFor="password" className="f-registration__field-label">Пароль:</label>
+                <input type="password" id="password" name="password" className="f-registration__field" />
 
-            <button type="submit" className="f-registration__btn-submit">Зарегистрироваться</button>
-        </form>
+                <button type="submit" className="f-registration__btn-submit">Зарегистрироваться</button>
+            </form>
+        </>
     );
 };

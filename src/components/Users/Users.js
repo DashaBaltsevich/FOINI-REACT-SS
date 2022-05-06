@@ -1,28 +1,42 @@
-import axios from 'axios';
+import { getUsers } from '../../api/facades';
+import { useAsync } from '../../hooks';
 import { useEffect, useContext } from 'react';
 import { UsersContext } from '../../contexts';
+import { Preloader } from '../Preloader';
 import './Users.scss';
 
 export const Users = () => {
     const { state: { users }, actions: { onFetchUsersSuccess } } = useContext(UsersContext);
+
+    const { execute, loading } = useAsync(
+        getUsers,
+        [],
+        [],
+        false,
+      );
         
     useEffect(() => {
         if (users.length) {
             return;
         }
 
-        axios.get(`https://randomuser.me/api/?results=4`)
-            .then(({ data }) => {
-               if(data?.results) {
-                 onFetchUsersSuccess(data.results);
-               }
-            })
-            .catch(() => {
-              throw new Error('Error. No data');
-            })
+        (async () => {
+            try {
+                const data = await execute();
+
+                if(data?.results) {
+                    onFetchUsersSuccess(data.results);
+                }
+            } catch (error) {
+                throw new Error('Error. No data');
+            }
+        })();
+
     }, [users, onFetchUsersSuccess]);
 
     return (
+        loading ? <Preloader />
+        :
         <section className="s-team">
             <div className="container">
                 <h2 className="s-team__title">Meet Us</h2>

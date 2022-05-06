@@ -1,4 +1,5 @@
 import { httpClient } from '../httpClient';
+import axios from 'axios';
 
 export const signUp = async (body) => {
   const { data } = await httpClient.post(`sign-up`, body);
@@ -22,5 +23,10 @@ export const getUserData = async () => {
 
 export const updateUserData = async (body) => {
   const { data } = await httpClient.patch(`user`, body);
+  return data;
+}
+
+export const getUsers = async (body) => {
+  const { data } = await axios.get(`https://randomuser.me/api/?results=4`);
   return data;
 }

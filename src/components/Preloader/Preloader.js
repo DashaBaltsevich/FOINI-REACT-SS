@@ -2,7 +2,7 @@ import './Preloader.scss';
 
 export const Preloader = () => {
     return (
-        <div className="preloader">
+        <div className="b-preloader">
             <img src="./img/next-episode.gif" alt="Preloader"/>
         </div>
     )
