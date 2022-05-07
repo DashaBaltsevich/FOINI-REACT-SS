@@ -1,4 +1,4 @@
-import { useAsync } from './hooks'
+import { useAsync } from './hooks';
 import { getUserData } from './api/facades';
 import { Preloader } from './components/Preloader';
 import { useContext, useEffect } from 'react';
@@ -16,13 +16,11 @@ import { AuthenticationContext } from './contexts';
 import './App.scss';
 
 function App() {
-  const { state: { isAuthorized }, actions: { setUserInformation, setAuthState }} = useContext(AuthenticationContext);
-  const { execute, loading } = useAsync(
-    getUserData,
-    [],
-    [],
-    false,
-  );
+  const {
+    state: { isAuthorized },
+    actions: { setUserInformation, setAuthState },
+  } = useContext(AuthenticationContext);
+  const { execute, loading } = useAsync(getUserData, [], [], false);
 
   useEffect(() => {
     if (!localStorage.getItem('accessToken')) {
@@ -36,32 +34,34 @@ function App() {
         setUserInformation(data?.content);
         setAuthState(true);
       } catch (err) {
-
+        return alert(
+          err?.response?.data?.message || err?.message || 'Unknown error!',
+        );
       }
-    })()
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
+  }, []);
 
   return (
     <div>
-      <Header/>
+      <Header />
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="services" element={<Services />} />
         <Route path="users" element={<Users />} />
-        <Route path="/me" element={
-          <PrivateRoute isAllowed={isAuthorized}>
-            <UserData />
-          </PrivateRoute>
-        }/>
+        <Route
+          path="/me"
+          element={
+            <PrivateRoute isAllowed={isAuthorized}>
+              <UserData />
+            </PrivateRoute>
+          }
+        />
       </Routes>
-      { loading ? (
-        <Preloader/>
-      ): null }
+      {loading ? <Preloader /> : null}
       <Footer />
     </div>
-  )
+  );
 }
 
 export default App;

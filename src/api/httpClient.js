@@ -1,41 +1,43 @@
 import axios from 'axios';
 
 const httpClient = axios.create({
-    baseURL: `https://infinite-woodland-61407.herokuapp.com/api/v1/`,
-    timeout: 0,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
+  baseURL: `https://infinite-woodland-61407.herokuapp.com/api/v1/`,
+  timeout: 0,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
+});
 
+httpClient.interceptors.request.use((config) => {
+  const method = config.method;
+  const url = config.url;
 
-httpClient.interceptors.request.use(
-
-  (config) => {
-    
-    const method = config.method;
-    const url = config.url;
-
-    if((method === 'get' && url === 'user') ||  url === 'sign-out' || (method === 'patch' && url === 'user')) {
-      config.headers.common.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
-    }
-    return config;
+  if (
+    (method === 'get' && url === 'user') ||
+    url === 'sign-out' ||
+    (method === 'patch' && url === 'user')
+  ) {
+    config.headers.common.Authorization = `Bearer ${localStorage.getItem(
+      'accessToken',
+    )}`;
   }
-  
-)
+  return config;
+});
 
 const resetTokens = async () => {
   const currentRefresh = localStorage.getItem('refreshToken');
 
   if (!currentRefresh) {
     return {
-      err: new Error('No refresh token found!')
-    }
+      err: new Error('No refresh token found!'),
+    };
   }
 
   try {
-    const { data: { content }} = await httpClient.post('refresh', { refreshToken: currentRefresh });
+    const {
+      data: { content },
+    } = await httpClient.post('refresh', { refreshToken: currentRefresh });
 
     if (!content || !content.accessToken || !content.refreshToken) {
       throw new Error('Refresh failed!');
@@ -44,12 +46,11 @@ const resetTokens = async () => {
     localStorage.setItem('accessToken', content.accessToken);
     localStorage.setItem('refreshToken', content.refreshToken);
 
-    return content.accessToken
-
+    return content.accessToken;
   } catch (err) {
     return { err };
   }
-}
+};
 
 const resetTokenAndReattemptRequest = async (error) => {
   try {
@@ -66,24 +67,23 @@ const resetTokenAndReattemptRequest = async (error) => {
     });
 
     return retryOriginalRequest;
-
-  } catch(err) {
+  } catch (err) {
     return Promise.reject(err);
   }
-}
+};
 
 httpClient.interceptors.response.use(
-    (response) => {
-        return response;
-    },
-    (error) => {
-      const needRefresh = error.response.data.content?.needRefresh;
-      if (needRefresh) {
-        return resetTokenAndReattemptRequest(error);
-      }
-        
-      return Promise.reject(error);
-    },
+  (response) => {
+    return response;
+  },
+  (error) => {
+    const needRefresh = error.response.data.content?.needRefresh;
+    if (needRefresh) {
+      return resetTokenAndReattemptRequest(error);
+    }
+
+    return Promise.reject(error);
+  },
 );
 
-export { httpClient }
+export { httpClient };
