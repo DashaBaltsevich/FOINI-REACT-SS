@@ -33,7 +33,6 @@ export const useAsync = (asyncFunc, args, deps, immediate = true) => {
         .finally(() => {
           setLoading(false);
         });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
     [asyncFunc, ...deps],
   );
@@ -42,7 +41,6 @@ export const useAsync = (asyncFunc, args, deps, immediate = true) => {
     if (immediate) {
       execute(...args);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [execute, ...deps]);
 
   return {
