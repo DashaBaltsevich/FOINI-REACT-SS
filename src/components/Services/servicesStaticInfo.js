@@ -22,5 +22,5 @@ export const servicesStaticInfo = [
   {
     title: 'Photo Editing',
     text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi ex doloribus vitae facere',
-  }
+  },
 ];
