@@ -4,8 +4,12 @@
     padding: 20px 60px;
     border: 1px red solid;
 
+    &__row {
+        margin-top: 30px;
+        text-align: center;
+    }
+
     &__field {
-        margin-bottom: 30px;
         padding: 5px;
         width: 200px;
         height: 30px;
@@ -13,12 +17,19 @@
         background-color: #fff;
 
         &-label {
+            display: inline-block;
             margin-bottom: 10px;
             font-size: 20px;
+        }
+
+        &-error {
+            margin-top: 5px;
+            color: #f44336;
         }
     }
 
     &__btn-submit {
+        margin-top: 40px;
         padding: 20px 22px;
         border: 1px green solid;
         color: #fff;
