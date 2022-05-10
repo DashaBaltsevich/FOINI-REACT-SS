@@ -4,6 +4,8 @@ import { updateUserData } from '../../api/facades';
 import { Preloader } from '../Preloader';
 import { useEffect, useContext, useState } from 'react';
 import { AuthenticationContext } from '../../contexts';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import './UserData.scss';
 
 export const UserData = () => {
@@ -27,6 +29,25 @@ export const UserData = () => {
     false,
   );
 
+  const initialValues = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+  };
+
+  const validationSchema = Yup.object({
+    firstName: Yup.string().defined().required('First Name is required'),
+    lastName: Yup.string().defined().required('Last Name is required'),
+    email: Yup.string()
+      .email('Invalid email address')
+      .required('Email is required')
+      .max(30, 'Are you really sure that your email is that big?'),
+    password: Yup.string()
+      .required('Passowrd is required')
+      .min(4, 'Must be more than 4 characters'),
+  });
+
   useEffect(() => {
     (async () => {
       if (userInformation !== null) {
@@ -43,23 +64,18 @@ export const UserData = () => {
     })();
   }, [userInformation, setUserInformation, setAuthState, getUser]);
 
-  const handleEditionFormSubmit = async (e) => {
-    e.preventDefault();
-
-    const body = {
-      firstName: e.target.elements.first_name.value,
-      lastName: e.target.elements.last_name.value,
-      email: e.target.elements.email.value,
-      password: e.target.elements.password.value,
-    };
-
-    if (body.firstName === '' || body.lastName === '' || body.email === '') {
+  const handleEditionFormSubmit = async (values) => {
+    if (
+      values.firstName === '' ||
+      values.lastName === '' ||
+      values.email === ''
+    ) {
       return;
     }
 
-    if (body.password !== '') {
+    if (values.password !== '') {
       try {
-        const data = await updateUser(body);
+        const data = await updateUser(values);
 
         setUserInformation(data?.content);
         setIsEditingEnable(false);
@@ -75,93 +91,109 @@ export const UserData = () => {
     }
   };
 
-  return userGetLoading || userUpdateLoading ? (
-    <Preloader />
-  ) : (
+  return (
     <div className="s-userdata">
-      <div className="container">
-        {isEditingEnable ? (
-          <form
-            className="f-edit-userdata"
-            method="POST"
-            onSubmit={handleEditionFormSubmit}
-          >
-            <label className="f-edit-userdata__field-label">
-              Имя:
-              <input
-                type="text"
-                name="first_name"
-                className="f-edit-userdata__field"
-              />
-            </label>
-
-            <label className="f-edit-userdata__field-label">
-              Фамилия:
-              <input
-                type="text"
-                name="last_name"
-                className="f-edit-userdata__field"
-              />
-            </label>
-
-            <label className="f-edit-userdata__field-label">
-              Почта:
-              <input
-                type="email"
-                name="email"
-                className="f-edit-userdata__field"
-              />
-            </label>
-
-            <label className="f-edit-userdata__field-label">
-              Введите пароль:
-              <input
-                type="password"
-                name="password"
-                className="f-edit-userdata__field"
-              />
-            </label>
-            {isPasswordEmpty ? (
-              <p className="f-edit-userdata-error-massage">
-                Пароль должен быть введен
-              </p>
-            ) : null}
-
-            <div>
-              <button className="f-edit-userdata__btn-submit">Сохранить</button>
-              <button
-                className="f-edit-userdata__btn-cancel"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsEditingEnable(false);
-                }}
-              >
-                Отмена
-              </button>
-            </div>
-          </form>
-        ) : (
-          <>
-            <ul className="l-userdata">
-              <li className="l-userdata__item">
-                Имя: {userInformation?.firstName}
-              </li>
-              <li className="l-userdata__item">
-                Фамилия: {userInformation?.lastName}
-              </li>
-              <li className="l-userdata__item">
-                Почта: {userInformation?.email}
-              </li>
-            </ul>
-            <button
-              className="btn-userdata-edit"
-              onClick={() => setIsEditingEnable(true)}
+      {userGetLoading || userUpdateLoading ? (
+        <Preloader />
+      ) : (
+        <div className="container">
+          {isEditingEnable ? (
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={(values) => handleEditionFormSubmit(values)}
             >
-              Редактировать
-            </button>
-          </>
-        )}
-      </div>
+              {({ values }) => (
+                <Form className="f-edit-userdata">
+                  <label className="f-edit-userdata__field-label">
+                    Имя:
+                    <Field
+                      type="text"
+                      name="firstName"
+                      className="f-edit-userdata__field"
+                      value={values.firstName}
+                    />
+                  </label>
+                  <ErrorMessage name="firstName" />
+
+                  <label className="f-edit-userdata__field-label">
+                    Фамилия:
+                    <Field
+                      type="text"
+                      name="lastName"
+                      className="f-edit-userdata__field"
+                      value={values.lastName}
+                    />
+                  </label>
+                  <ErrorMessage name="lastName" />
+
+                  <label className="f-edit-userdata__field-label">
+                    Почта:
+                    <Field
+                      type="email"
+                      name="email"
+                      className="f-edit-userdata__field"
+                      value={values.email}
+                    />
+                  </label>
+                  <ErrorMessage name="email" />
+
+                  <label className="f-edit-userdata__field-label">
+                    Введите пароль:
+                    <Field
+                      type="password"
+                      name="password"
+                      className="f-edit-userdata__field"
+                      value={values.password}
+                    />
+                  </label>
+                  <ErrorMessage name="password" />
+                  {isPasswordEmpty ? (
+                    <p className="f-edit-userdata-error-massage">
+                      Пароль должен быть введен
+                    </p>
+                  ) : null}
+
+                  <div>
+                    <button className="f-edit-userdata__btn-submit">
+                      Сохранить
+                    </button>
+                    <button
+                      className="f-edit-userdata__btn-cancel"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsEditingEnable(false);
+                      }}
+                    >
+                      Отмена
+                    </button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          ) : (
+            <>
+              <ul className="l-userdata">
+                <li className="l-userdata__item">
+                  Имя: {userInformation?.firstName}
+                </li>
+                <li className="l-userdata__item">
+                  Фамилия: {userInformation?.lastName}
+                </li>
+                <li className="l-userdata__item">
+                  Почта: {userInformation?.email}
+                </li>
+              </ul>
+              <button
+                className="btn-userdata-edit"
+                onClick={() => setIsEditingEnable(true)}
+              >
+                Редактировать
+              </button>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };

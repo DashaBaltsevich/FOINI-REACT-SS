@@ -1,6 +1,8 @@
 import { useContext } from 'react';
 import { AuthenticationContext } from '../../contexts';
 import { useAsync } from '../../hooks';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import { Preloader } from '../Preloader';
 import { signIn } from '../../api/facades';
 import './LoginForm.scss';
@@ -10,17 +12,24 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
     actions: { setAuthState },
   } = useContext(AuthenticationContext);
   const { execute, loading } = useAsync(signIn, [], [], false);
+  const initialValues = {
+    email: '',
+    password: '',
+  };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email('Invalid email address')
+      .required('Email is required')
+      .max(30, 'Are you really sure that your email is that big?'),
+    password: Yup.string()
+      .required('Passowrd is required')
+      .min(4, 'Must be more than 4 characters'),
+  });
 
-    const body = {
-      email: e.target.elements.email.value,
-      password: e.target.elements.password.value,
-    };
-
+  const handleFormSubmit = async (values) => {
     try {
-      const data = await execute(body);
+      const data = await execute(values);
 
       setAuthState(true);
       setIsLoginFormVisible(false);
@@ -37,31 +46,42 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
     <>
       {loading && <Preloader />}
 
-      <form className="f-login" method="POST" onSubmit={handleFormSubmit}>
-        <label htmlFor="email" className="f-login__field-label">
-          Почта:
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          className="f-login__field"
-        />
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={(values) => handleFormSubmit(values)}
+      >
+        {({ values }) => (
+          <Form className="f-login">
+            <label htmlFor="email" className="f-login__field-label">
+              Почта:
+            </label>
+            <Field
+              type="email"
+              id="email"
+              name="email"
+              className="f-login__field"
+              value={values.email}
+            />
+            <ErrorMessage name="password" />
 
-        <label htmlFor="password" className="f-login__field-label">
-          Пароль:
-        </label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          className="f-login__field"
-        />
+            <label htmlFor="password" className="f-login__field-label">
+              Пароль:
+            </label>
+            <Field
+              type="password"
+              id="password"
+              name="password"
+              className="f-login__field"
+            />
+            <ErrorMessage name="password" />
 
-        <button type="submit" className="f-login__btn-submit">
-          Войти
-        </button>
-      </form>
+            <button type="submit" className="f-login__btn-submit">
+              Войти
+            </button>
+          </Form>
+        )}
+      </Formik>
     </>
   );
 };
