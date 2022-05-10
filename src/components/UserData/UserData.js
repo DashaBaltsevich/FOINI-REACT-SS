@@ -8,13 +8,24 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import './UserData.scss';
 
+const validationSchema = Yup.object({
+  firstName: Yup.string().defined('First Name must be defined'),
+  lastName: Yup.string().defined('First Name must be defined'),
+  email: Yup.string()
+    .email('Invalid email address')
+    .required('Email is required')
+    .max(30, 'Are you really sure that your email is that big?'),
+  password: Yup.string()
+    .required('Password is required')
+    .min(4, 'Must be more than 4 characters'),
+});
+
 export const UserData = () => {
   const {
     state: { userInformation },
     actions: { setUserInformation, setAuthState },
   } = useContext(AuthenticationContext);
   const [isEditingEnable, setIsEditingEnable] = useState(false);
-  const [isPasswordEmpty, setIsPasswordEmpty] = useState(false);
 
   const { execute: getUser, loading: userGetLoading } = useAsync(
     getUserData,
@@ -28,25 +39,6 @@ export const UserData = () => {
     [],
     false,
   );
-
-  const initialValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-  };
-
-  const validationSchema = Yup.object({
-    firstName: Yup.string().defined().required('First Name is required'),
-    lastName: Yup.string().defined().required('Last Name is required'),
-    email: Yup.string()
-      .email('Invalid email address')
-      .required('Email is required')
-      .max(30, 'Are you really sure that your email is that big?'),
-    password: Yup.string()
-      .required('Passowrd is required')
-      .min(4, 'Must be more than 4 characters'),
-  });
 
   useEffect(() => {
     (async () => {
@@ -65,29 +57,15 @@ export const UserData = () => {
   }, [userInformation, setUserInformation, setAuthState, getUser]);
 
   const handleEditionFormSubmit = async (values) => {
-    if (
-      values.firstName === '' ||
-      values.lastName === '' ||
-      values.email === ''
-    ) {
-      return;
-    }
+    try {
+      const data = await updateUser(values);
 
-    if (values.password !== '') {
-      try {
-        const data = await updateUser(values);
-
-        setUserInformation(data?.content);
-        setIsEditingEnable(false);
-        setIsPasswordEmpty(false);
-      } catch (error) {
-        return alert(
-          error?.response?.data?.message || error?.message || 'Unknown error!',
-        );
-      }
-    } else {
-      setIsPasswordEmpty(true);
-      return;
+      setUserInformation(data?.content);
+      setIsEditingEnable(false);
+    } catch (error) {
+      return alert(
+        error?.response?.data?.message || error?.message || 'Unknown error!',
+      );
     }
   };
 
@@ -99,60 +77,96 @@ export const UserData = () => {
         <div className="container">
           {isEditingEnable ? (
             <Formik
-              initialValues={initialValues}
+              initialValues={{
+                firstName: '',
+                lastName: '',
+                email: '',
+                password: '',
+              }}
               validationSchema={validationSchema}
               onSubmit={(values) => handleEditionFormSubmit(values)}
             >
               {({ values }) => (
                 <Form className="f-edit-userdata">
-                  <label className="f-edit-userdata__field-label">
-                    Имя:
-                    <Field
-                      type="text"
+                  <div className="f-edit-userdata__row">
+                    <label className="f-edit-userdata__field-label">
+                      Имя:
+                      <Field
+                        type="text"
+                        name="firstName"
+                        className="f-edit-userdata__field"
+                        value={values.firstName}
+                      />
+                    </label>
+                    <ErrorMessage
                       name="firstName"
-                      className="f-edit-userdata__field"
-                      value={values.firstName}
+                      component={({ children }) => (
+                        <p className="f-edit-userdata__field-error">
+                          {children}
+                        </p>
+                      )}
                     />
-                  </label>
-                  <ErrorMessage name="firstName" />
+                  </div>
 
-                  <label className="f-edit-userdata__field-label">
-                    Фамилия:
-                    <Field
-                      type="text"
+                  <div className="f-edit-userdata__row">
+                    <label className="f-edit-userdata__field-label">
+                      Фамилия:
+                      <Field
+                        type="text"
+                        name="lastName"
+                        className="f-edit-userdata__field"
+                        value={values.lastName}
+                      />
+                    </label>
+                    <ErrorMessage
                       name="lastName"
-                      className="f-edit-userdata__field"
-                      value={values.lastName}
+                      component={({ children }) => (
+                        <p className="f-edit-userdata__field-error">
+                          {children}
+                        </p>
+                      )}
                     />
-                  </label>
-                  <ErrorMessage name="lastName" />
+                  </div>
 
-                  <label className="f-edit-userdata__field-label">
-                    Почта:
-                    <Field
-                      type="email"
+                  <div className="f-edit-userdata__row">
+                    <label className="f-edit-userdata__field-label">
+                      Почта:
+                      <Field
+                        type="email"
+                        name="email"
+                        className="f-edit-userdata__field"
+                        value={values.email}
+                      />
+                    </label>
+                    <ErrorMessage
                       name="email"
-                      className="f-edit-userdata__field"
-                      value={values.email}
+                      component={({ children }) => (
+                        <p className="f-edit-userdata__field-error">
+                          {children}
+                        </p>
+                      )}
                     />
-                  </label>
-                  <ErrorMessage name="email" />
+                  </div>
 
-                  <label className="f-edit-userdata__field-label">
-                    Введите пароль:
-                    <Field
-                      type="password"
+                  <div className="f-edit-userdata__row">
+                    <label className="f-edit-userdata__field-label">
+                      Введите пароль:
+                      <Field
+                        type="password"
+                        name="password"
+                        className="f-edit-userdata__field"
+                        value={values.password}
+                      />
+                    </label>
+                    <ErrorMessage
                       name="password"
-                      className="f-edit-userdata__field"
-                      value={values.password}
+                      component={({ children }) => (
+                        <p className="f-edit-userdata__field-error">
+                          {children}
+                        </p>
+                      )}
                     />
-                  </label>
-                  <ErrorMessage name="password" />
-                  {isPasswordEmpty ? (
-                    <p className="f-edit-userdata-error-massage">
-                      Пароль должен быть введен
-                    </p>
-                  ) : null}
+                  </div>
 
                   <div>
                     <button className="f-edit-userdata__btn-submit">
