@@ -1,32 +1,41 @@
 import { useAsync } from '../../hooks';
 import { signUp } from '../../api/facades';
-import './RegForm.scss';
 import { Preloader } from '../Preloader';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as yup from 'yup';
+import './RegForm.scss';
+
+const validationSchema = yup.object({
+  firstName: yup.string().defined().required(),
+  lastName: yup.string().defined().required(),
+  email: yup
+    .string()
+    .email('Invalid email address')
+    .required('Email is required')
+    .max(30, 'Are you really sure that your email is that big?'),
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(4, 'Must Contain 4 Characters')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{4,})/,
+      'Must Contain One Uppercase, One Lowercase, and One Number',
+    ),
+});
 
 export const RegForm = ({ setIsRegFormVisible }) => {
   const { execute, loading } = useAsync(signUp, [], [], false);
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-
-    const body = {
-      firstName: e.target.elements.first_name.value,
-      lastName: e.target.elements.last_name.value,
-      email: e.target.elements.email.value,
-      password: e.target.elements.password.value,
-    };
-
+  const handleFormSubmit = async (values) => {
     try {
-      const data = await execute(body);
+      const data = await execute(values);
 
-      console.log(data, body.email);
       alert(data?.message || 'Registration succeeded!');
       setIsRegFormVisible(false);
     } catch (error) {
       alert(
         error?.response?.data?.message || error?.message || 'Unknown error!',
       );
-      console.dir(error);
     }
   };
 
@@ -34,55 +43,111 @@ export const RegForm = ({ setIsRegFormVisible }) => {
     <>
       {loading && <Preloader />}
 
-      <form
-        className="f-registration"
-        method="POST"
-        onSubmit={handleFormSubmit}
+      <Formik
+        initialValues={{
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+        }}
+        validateOnBlur={false}
+        validationSchema={validationSchema}
+        onSubmit={(values) => handleFormSubmit(values)}
       >
-        <label htmlFor="first_name" className="f-registration__field-label">
-          Имя:
-        </label>
-        <input
-          type="text"
-          id="first_name"
-          name="first_name"
-          className="f-registration__field"
-        />
+        {({ values }) => (
+          <Form className="f-registration">
+            <div className="f-registration__row">
+              <label
+                htmlFor="first_name"
+                className="f-registration__field-label"
+              >
+                Имя:
+              </label>
+              <br />
+              <Field
+                type="text"
+                id="firstName"
+                name="firstName"
+                className="f-registration__field"
+                value={values.firstName}
+              />
+              <ErrorMessage
+                name="firstName"
+                component={({ children }) => (
+                  <p className="f-registration__field-error">{children}</p>
+                )}
+              />
+            </div>
 
-        <label htmlFor="last_name" className="f-registration__field-label">
-          Фамилия:
-        </label>
-        <input
-          type="text"
-          id="last_name"
-          name="last_name"
-          className="f-registration__field"
-        />
+            <div className="f-registration__row">
+              <label
+                htmlFor="last_name"
+                className="f-registration__field-label"
+              >
+                Фамилия:
+              </label>
+              <br />
+              <Field
+                type="text"
+                id="lastName"
+                name="lastName"
+                className="f-registration__field"
+                value={values.lastName}
+              />
+              <ErrorMessage
+                name="lastName"
+                component={({ children }) => (
+                  <p className="f-registration__field-error">{children}</p>
+                )}
+              />
+            </div>
 
-        <label htmlFor="email" className="f-registration__field-label">
-          Почта:
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          className="f-registration__field"
-        />
+            <div className="f-registration__row">
+              <label htmlFor="email" className="f-registration__field-label">
+                Почта:
+              </label>
+              <br />
+              <Field
+                type="email"
+                id="email"
+                name="email"
+                className="f-registration__field"
+                value={values.email}
+              />
+              <ErrorMessage
+                name="email"
+                component={({ children }) => (
+                  <p className="f-registration__field-error">{children}</p>
+                )}
+              />
+            </div>
 
-        <label htmlFor="password" className="f-registration__field-label">
-          Пароль:
-        </label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          className="f-registration__field"
-        />
+            <div className="f-registration__row">
+              <label htmlFor="password" className="f-registration__field-label">
+                Пароль:
+              </label>
+              <br />
+              <Field
+                type="password"
+                id="password"
+                name="password"
+                className="f-registration__field"
+                value={values.password}
+              />
+              <ErrorMessage
+                name="password"
+                component={({ children }) => (
+                  <p className="f-registration__field-error">{children}</p>
+                )}
+              />
+            </div>
 
-        <button type="submit" className="f-registration__btn-submit">
-          Зарегистрироваться
-        </button>
-      </form>
+            <button type="submit" className="f-registration__btn-submit">
+              Зарегистрироваться
+            </button>
+          </Form>
+        )}
+      </Formik>
     </>
   );
 };

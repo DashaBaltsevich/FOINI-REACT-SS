@@ -26,6 +26,10 @@
     display: flex;
     flex-direction: column;
 
+    &__row {
+        margin-top: 30px;
+    }
+
     &__field {
         margin-left: 20px;
         background-color: #fff;
@@ -36,6 +40,12 @@
                 margin-top: 20px;
             }
             
+        }
+
+        &-error {
+            margin-top: 5px;
+            color: #f44336;
+            font-size: 16px;
         }
     }
 
