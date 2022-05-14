@@ -35,6 +35,7 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
       setAuthState(true);
       setIsLoginFormVisible(false);
       setNotification('Success', 'Authentication successful', 'green');
+
       localStorage.setItem('accessToken', data?.content.token.accessToken);
       localStorage.setItem('refreshToken', data?.content.token.refreshToken);
     } catch (err) {

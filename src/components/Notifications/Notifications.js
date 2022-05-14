@@ -4,13 +4,13 @@ import './Notifications.scss';
 
 export const Notifications = () => {
   const {
-    state: { toasts },
+    state: { notificationState },
     actions: { deleteNotification },
   } = useContext(NotificationsContext);
   return (
     <div className="b-notifications-container">
-      {toasts &&
-        toasts.map((toast) => (
+      {notificationState?.toasts &&
+        notificationState.toasts.map((toast) => (
           <div
             key={toast.id}
             className="b-notification-item"
