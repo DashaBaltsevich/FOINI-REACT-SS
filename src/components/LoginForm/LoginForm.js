@@ -34,7 +34,7 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
 
       setAuthState(true);
       setIsLoginFormVisible(false);
-      setNotification('Success', 'Authentication successful', 'green');
+      setNotification('Success', 'Authentication successful');
 
       localStorage.setItem('accessToken', data?.content.token.accessToken);
       localStorage.setItem('refreshToken', data?.content.token.refreshToken);
@@ -44,7 +44,6 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
         `${err?.response?.data?.message}` ||
           `${err?.message}` ||
           `Unknown error!`,
-        'red',
       );
     }
   };

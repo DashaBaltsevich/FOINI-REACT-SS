@@ -1,26 +1,25 @@
-.b-notifications-container {
+.b-notifications {
     position: fixed;
     right: 5px;
     top: 100px;
     width: 260px;
     z-index: 1;
-}
-
-.b-notification-item {
-    display: flex;
-    justify-content: space-between;
-    border-radius: 5px;
-    color: #fff;
-    align-items: start;
-    padding: 10px 20px;
-    margin-bottom: 10px;
-    &__title {
-        font-size: 18px;
-        font-weight: 300;
-        margin-bottom: 10px;
-    }
-    &__btn-close {
-        padding: 5px 0;
+    &__item {
+        display: flex;
+        justify-content: space-between;
+        border-radius: 5px;
         color: #fff;
+        align-items: start;
+        padding: 10px 20px;
+        margin-bottom: 10px;
+        &-title {
+            font-size: 18px;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+        &-btn-close {
+            padding: 5px 0;
+            color: #fff;
+        }
     }
 }

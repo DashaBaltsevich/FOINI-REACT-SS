@@ -63,7 +63,7 @@ export const UserData = () => {
     try {
       const data = await updateUser(values);
 
-      setNotification('Success', 'Data has been updated', 'green');
+      setNotification('Success', 'Data has been updated');
       setUserInformation(data?.content);
       setIsEditingEnable(false);
     } catch (error) {
@@ -72,7 +72,6 @@ export const UserData = () => {
         `${error?.response?.data?.message}` ||
           `${error?.message}` ||
           `Unknown error!`,
-        'red',
       );
     }
   };

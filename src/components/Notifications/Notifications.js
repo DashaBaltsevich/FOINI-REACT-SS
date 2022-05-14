@@ -4,24 +4,24 @@ import './Notifications.scss';
 
 export const Notifications = () => {
   const {
-    state: { notificationState },
+    state: { notifications },
     actions: { deleteNotification },
   } = useContext(NotificationsContext);
   return (
-    <div className="b-notifications-container">
-      {notificationState?.toasts &&
-        notificationState.toasts.map((toast) => (
+    <div className="b-notifications">
+      {notifications &&
+        notifications.map((toast) => (
           <div
             key={toast.id}
-            className="b-notification-item"
+            className="b-notifications__item"
             style={{ backgroundColor: `${toast.color}` }}
           >
             <div>
-              <h3 className="b-notification-item__title">{toast.type}</h3>
+              <h3 className="b-notifications__item-title">{toast.type}</h3>
               <p>{toast.message}</p>
             </div>
             <button
-              className="b-notification-item__btn-close"
+              className="b-notifications__item-btn-close"
               onClick={() => {
                 deleteNotification(toast.id);
               }}

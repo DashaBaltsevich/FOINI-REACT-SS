@@ -38,7 +38,6 @@ export const RegForm = ({ setIsRegFormVisible }) => {
       setNotification(
         'Success',
         `${data?.message}` || 'Registration succeeded!',
-        'green',
       );
       setIsRegFormVisible(false);
     } catch (error) {
@@ -47,7 +46,6 @@ export const RegForm = ({ setIsRegFormVisible }) => {
         `${error?.response?.data?.message}` ||
           `${error?.message}` ||
           `Unknown error!`,
-        'red',
       );
     }
   };

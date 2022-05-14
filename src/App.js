@@ -43,7 +43,6 @@ function App() {
           `${err?.response?.data?.message}` ||
             `${err?.message}` ||
             'Unknown error!',
-          'red',
         );
       }
     })();

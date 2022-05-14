@@ -3,39 +3,39 @@ import { createContext, useState } from 'react';
 export const NotificationsContext = createContext(null);
 
 export const NotificationsContextWrapper = ({ children }) => {
-  const [notificationState, setNotificationState] = useState({
-    toasts: [],
-  });
+  const [notifications, setNotifications] = useState([]);
 
-  const setNotification = (type, message, color) => {
+  const colors = {
+    Error: 'red',
+    Success: 'green',
+  };
+
+  const setNotification = (type, message) => {
     const id = Math.random().toString(36).substring(2, 9);
-    const newToast = {
-      toast: {
+    setNotifications((prev) => [
+      ...prev,
+      {
+        id,
         type,
         message,
-        id,
-        color,
+        color: colors[type],
       },
-    };
-
-    setNotificationState({
-      toasts: [...notificationState.toasts, newToast.toast],
-    });
+    ]);
 
     setTimeout(() => {
       deleteNotification(id);
-    }, 3000);
+    }, 4000);
   };
 
   const deleteNotification = (id) => {
-    const updatedToast = notificationState.toasts.filter((e) => e.id != id);
-    setNotificationState(updatedToast.toast);
+    const filtered = notifications.filter((toast) => toast.id !== id);
+    setNotifications(filtered);
   };
 
   return (
     <NotificationsContext.Provider
       value={{
-        state: { notificationState },
+        state: { notifications },
         actions: { setNotification, deleteNotification },
       }}
       children={children}
