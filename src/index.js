@@ -2,9 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
-import { NotificationContextWrapper } from './contexts';
-import { NotificationContainer } from './components';
-import { UsersContextWrapper, AuthenticationContextWrapper } from './contexts';
+import { ContextAggregator } from './components/ContextAggregator';
 import reportWebVitals from './reportWebVitals';
 import './index.scss';
 
@@ -13,14 +11,9 @@ const root = createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <NotificationContextWrapper>
-        <NotificationContainer />
-        <AuthenticationContextWrapper>
-          <UsersContextWrapper>
-            <App />
-          </UsersContextWrapper>
-        </AuthenticationContextWrapper>
-      </NotificationContextWrapper>
+      <ContextAggregator>
+        <App />
+      </ContextAggregator>
     </BrowserRouter>
   </React.StrictMode>,
 );

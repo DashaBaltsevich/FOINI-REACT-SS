@@ -1,6 +1,6 @@
 import { createContext, useReducer } from 'react';
 
-export const NotificationContext = createContext(null);
+export const NotificationsContext = createContext(null);
 
 const iniitialState = {
   toasts: [],
@@ -21,7 +21,7 @@ const reducer = (state, action) => {
   }
 };
 
-export const NotificationContextWrapper = ({ children }) => {
+export const NotificationsContextWrapper = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, iniitialState);
 
   const setNotification = (type, message, color) => {
@@ -52,12 +52,9 @@ export const NotificationContextWrapper = ({ children }) => {
   };
 
   return (
-    <NotificationContext.Provider
+    <NotificationsContext.Provider
       value={{ state, actions: { setNotification, deleteNotification } }}
       children={children}
     />
   );
 };
-
-// export const useToastStateContext = () => useContext(ToastStateContext);
-// export const useToastDispatchContext = () => useContext(ToastDispatchContext);

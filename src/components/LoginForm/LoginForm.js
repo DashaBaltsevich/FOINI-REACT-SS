@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { AuthenticationContext, NotificationContext } from '../../contexts';
+import { AuthenticationContext, NotificationsContext } from '../../contexts';
 import { useAsync } from '../../hooks';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
@@ -25,7 +25,7 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
   } = useContext(AuthenticationContext);
   const {
     actions: { setNotification },
-  } = useContext(NotificationContext);
+  } = useContext(NotificationsContext);
   const { execute, loading } = useAsync(signIn, [], [], false);
 
   const handleFormSubmit = async (values) => {
@@ -35,12 +35,15 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
       setAuthState(true);
       setIsLoginFormVisible(false);
       setNotification('Success', 'Authentication successful', 'green');
-      setNotification('Error', 'Error Text', 'red');
       localStorage.setItem('accessToken', data?.content.token.accessToken);
       localStorage.setItem('refreshToken', data?.content.token.refreshToken);
     } catch (err) {
-      return alert(
-        err?.response?.data?.message || err?.message || 'Unknown error!',
+      return setNotification(
+        'Error',
+        `${err?.response?.data?.message}` ||
+          `${err?.message}` ||
+          `Unknown error!`,
+        'red',
       );
     }
   };

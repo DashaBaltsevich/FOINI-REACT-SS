@@ -27,10 +27,9 @@ export const Header = () => {
     localStorage.removeItem('refreshToken');
   };
 
-  return loading ? (
-    <Preloader />
-  ) : (
+  return (
     <>
+      {loading && <Preloader />}
       <header className="header">
         <div className="container">
           <div className="header__inner">

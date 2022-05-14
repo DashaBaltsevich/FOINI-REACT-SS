@@ -1,6 +1,8 @@
+import { useContext } from 'react';
 import { useAsync } from '../../hooks';
 import { signUp } from '../../api/facades';
 import { Preloader } from '../Preloader';
+import { NotificationsContext } from '../../contexts';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import './RegForm.scss';
@@ -25,16 +27,27 @@ const validationSchema = yup.object({
 
 export const RegForm = ({ setIsRegFormVisible }) => {
   const { execute, loading } = useAsync(signUp, [], [], false);
+  const {
+    actions: { setNotification },
+  } = useContext(NotificationsContext);
 
   const handleFormSubmit = async (values) => {
     try {
       const data = await execute(values);
 
-      alert(data?.message || 'Registration succeeded!');
+      setNotification(
+        'Success',
+        `${data?.message}` || 'Registration succeeded!',
+        'green',
+      );
       setIsRegFormVisible(false);
     } catch (error) {
-      alert(
-        error?.response?.data?.message || error?.message || 'Unknown error!',
+      return setNotification(
+        'Error',
+        `${error?.response?.data?.message}` ||
+          `${error?.message}` ||
+          `Unknown error!`,
+        'red',
       );
     }
   };

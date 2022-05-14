@@ -1,3 +1,11 @@
+.b-notifications-container {
+    position: fixed;
+    right: 5px;
+    top: 100px;
+    width: 260px;
+    z-index: 1;
+}
+
 .b-notification-item {
     display: flex;
     justify-content: space-between;

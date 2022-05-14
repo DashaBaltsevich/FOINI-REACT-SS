@@ -11,8 +11,9 @@ import {
   Services,
   Users,
   PrivateRoute,
+  Notifications,
 } from './components';
-import { AuthenticationContext } from './contexts';
+import { AuthenticationContext, NotificationsContext } from './contexts';
 import './App.scss';
 
 function App() {
@@ -20,6 +21,9 @@ function App() {
     state: { isAuthorized },
     actions: { setUserInformation, setAuthState },
   } = useContext(AuthenticationContext);
+  const {
+    actions: { setNotification },
+  } = useContext(NotificationsContext);
   const { execute, loading } = useAsync(getUserData, [], [], false);
 
   useEffect(() => {
@@ -34,8 +38,12 @@ function App() {
         setUserInformation(data?.content);
         setAuthState(true);
       } catch (err) {
-        return alert(
-          err?.response?.data?.message || err?.message || 'Unknown error!',
+        return setNotification(
+          'Error',
+          `${err?.response?.data?.message}` ||
+            `${err?.message}` ||
+            'Unknown error!',
+          'red',
         );
       }
     })();
@@ -59,6 +67,7 @@ function App() {
       </Routes>
       {loading ? <Preloader /> : null}
       <Footer />
+      <Notifications />
     </div>
   );
 }

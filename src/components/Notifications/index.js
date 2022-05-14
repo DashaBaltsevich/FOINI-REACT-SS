@@ -1,1 +1,1 @@
-export { NotificationContainer } from './NotificationContainer';
+export { Notifications } from './Notifications';
