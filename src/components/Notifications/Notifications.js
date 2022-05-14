@@ -8,29 +8,29 @@ export const Notifications = () => {
     actions: { deleteNotification },
   } = useContext(NotificationsContext);
   return (
-    <div className="b-notifications">
+    <>
       {notifications &&
         notifications.map((toast) => (
-          <div
-            key={toast.id}
-            className="b-notifications__item"
-            style={{ backgroundColor: `${toast.color}` }}
-          >
-            <div>
-              <h3 className="b-notifications__item-title">{toast.type}</h3>
-              <p>{toast.message}</p>
-            </div>
-            <button
-              className="b-notifications__item-btn-close"
-              onClick={() => {
-                deleteNotification(toast.id);
-              }}
+          <div className="b-notifications" key={toast.id}>
+            <div
+              className="b-notifications__item"
+              style={{ backgroundColor: `${toast.color}` }}
             >
-              X
-            </button>
+              <div>
+                <h3 className="b-notifications__item-title">{toast.type}</h3>
+                <p>{toast.message}</p>
+              </div>
+              <button
+                className="b-notifications__item-btn-close"
+                onClick={() => {
+                  deleteNotification(toast.id);
+                }}
+              >
+                X
+              </button>
+            </div>
           </div>
         ))}
-      <p></p>
-    </div>
+    </>
   );
 };
