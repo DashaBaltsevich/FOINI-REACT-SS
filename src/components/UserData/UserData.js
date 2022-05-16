@@ -3,7 +3,7 @@ import { getUserData } from '../../api/facades';
 import { updateUserData } from '../../api/facades';
 import { Preloader } from '../Preloader';
 import { useEffect, useContext, useState } from 'react';
-import { AuthenticationContext } from '../../contexts';
+import { AuthenticationContext, NotificationsContext } from '../../contexts';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import './UserData.scss';
@@ -25,6 +25,9 @@ export const UserData = () => {
     state: { userInformation },
     actions: { setUserInformation, setAuthState },
   } = useContext(AuthenticationContext);
+  const {
+    actions: { setNotification },
+  } = useContext(NotificationsContext);
   const [isEditingEnable, setIsEditingEnable] = useState(false);
 
   const { execute: getUser, loading: userGetLoading } = useAsync(
@@ -60,11 +63,15 @@ export const UserData = () => {
     try {
       const data = await updateUser(values);
 
+      setNotification('Success', 'Data has been updated');
       setUserInformation(data?.content);
       setIsEditingEnable(false);
     } catch (error) {
-      return alert(
-        error?.response?.data?.message || error?.message || 'Unknown error!',
+      return setNotification(
+        'Error',
+        `${error?.response?.data?.message}` ||
+          `${error?.message}` ||
+          `Unknown error!`,
       );
     }
   };
