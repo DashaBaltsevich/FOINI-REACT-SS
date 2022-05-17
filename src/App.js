@@ -1,8 +1,9 @@
 import { useAsync } from './hooks';
 import { getUserData } from './api/facades';
 import { Preloader } from './components/Preloader';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Header,
   Footer,
@@ -13,18 +14,20 @@ import {
   PrivateRoute,
   Notifications,
 } from './components';
-import { AuthenticationContext, NotificationsContext } from './contexts';
+import {
+  setUserInformation,
+  setAuthState,
+  setNotification,
+} from './store/actions';
 import './App.scss';
 
 function App() {
-  const {
-    state: { isAuthorized },
-    actions: { setUserInformation, setAuthState },
-  } = useContext(AuthenticationContext);
-  const {
-    actions: { setNotification },
-  } = useContext(NotificationsContext);
   const { execute, loading } = useAsync(getUserData, [], [], false);
+
+  const dispatch = useDispatch();
+  const isAuthorized = useSelector(
+    (state) => state.authenticationReducer.isAuthorized,
+  );
 
   useEffect(() => {
     if (!localStorage.getItem('accessToken')) {
@@ -34,15 +37,16 @@ function App() {
     (async () => {
       try {
         const data = await execute();
-
-        setUserInformation(data?.content);
-        setAuthState(true);
+        dispatch(setUserInformation(data?.content));
+        dispatch(setAuthState(true));
       } catch (err) {
-        return setNotification(
-          'Error',
-          `${err?.response?.data?.message}` ||
-            `${err?.message}` ||
-            'Unknown error!',
+        return dispatch(
+          setNotification(
+            'Error',
+            `${err?.response?.data?.message}` ||
+              `${err?.message}` ||
+              'Unknown error!',
+          ),
         );
       }
     })();

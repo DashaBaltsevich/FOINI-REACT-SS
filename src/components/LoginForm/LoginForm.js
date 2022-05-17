@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { AuthenticationContext, NotificationsContext } from '../../contexts';
+import { setAuthState, setNotification } from '../../store/actions';
+import { useDispatch } from 'react-redux';
 import { useAsync } from '../../hooks';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
@@ -20,30 +20,28 @@ const validationSchema = yup.object({
 });
 
 export const LoginForm = ({ setIsLoginFormVisible }) => {
-  const {
-    actions: { setAuthState },
-  } = useContext(AuthenticationContext);
-  const {
-    actions: { setNotification },
-  } = useContext(NotificationsContext);
   const { execute, loading } = useAsync(signIn, [], [], false);
+
+  const dispatch = useDispatch();
 
   const handleFormSubmit = async (values) => {
     try {
       const data = await execute(values);
 
-      setAuthState(true);
+      dispatch(setAuthState(true));
       setIsLoginFormVisible(false);
-      setNotification('Success', 'Authentication successful');
+      dispatch(setNotification('Success', 'Authentication successful'));
 
       localStorage.setItem('accessToken', data?.content.token.accessToken);
       localStorage.setItem('refreshToken', data?.content.token.refreshToken);
     } catch (err) {
-      return setNotification(
-        'Error',
-        `${err?.response?.data?.message}` ||
-          `${err?.message}` ||
-          `Unknown error!`,
+      return dispatch(
+        setNotification(
+          'Error',
+          `${err?.response?.data?.message}` ||
+            `${err?.message}` ||
+            `Unknown error!`,
+        ),
       );
     }
   };
