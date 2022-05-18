@@ -1,4 +1,4 @@
-import { setAuthState, setNotification } from '../../store/actions';
+import { setAuthState, setNotificationWithTimeout } from '../../store/actions';
 import { useDispatch } from 'react-redux';
 import { useAsync } from '../../hooks';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
@@ -30,13 +30,15 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
 
       dispatch(setAuthState(true));
       setIsLoginFormVisible(false);
-      dispatch(setNotification('Success', 'Authentication successful'));
+      dispatch(
+        setNotificationWithTimeout('Success', 'Authentication successful'),
+      );
 
       localStorage.setItem('accessToken', data?.content.token.accessToken);
       localStorage.setItem('refreshToken', data?.content.token.refreshToken);
     } catch (err) {
       return dispatch(
-        setNotification(
+        setNotificationWithTimeout(
           'Error',
           `${err?.response?.data?.message}` ||
             `${err?.message}` ||

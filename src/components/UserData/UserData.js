@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import {
   setAuthState,
   setUserInformation,
-  setNotification,
+  setNotificationWithTimeout,
 } from '../../store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
@@ -65,12 +65,12 @@ export const UserData = () => {
     try {
       const data = await updateUser(values);
 
-      dispatch(setNotification('Success', 'Data has been updated'));
+      dispatch(setNotificationWithTimeout('Success', 'Data has been updated'));
       dispatch(setUserInformation(data?.content));
       setIsEditingEnable(false);
     } catch (error) {
       return dispatch(
-        setNotification(
+        setNotificationWithTimeout(
           'Error',
           `${error?.response?.data?.message}` ||
             `${error?.message}` ||

@@ -7,28 +7,30 @@ export const Notifications = () => {
   const notifications = useSelector(
     (state) => state.notificationsReducer.toasts,
   );
-  return notifications.length ? (
-    <div className="b-notifications">
-      {notifications.map((toast) => (
-        <div
-          key={toast.id}
-          className="b-notifications__item"
-          style={{ backgroundColor: `${toast.color}` }}
-        >
-          <div>
-            <h3 className="b-notifications__item-title">{toast.type}</h3>
-            <p>{toast.message}</p>
-          </div>
-          <button
-            className="b-notifications__item-btn-close"
-            onClick={() => {
-              dispatch(deleteNotification(toast.id));
-            }}
+  return (
+    !!notifications.length && (
+      <div className="b-notifications">
+        {notifications.map((toast) => (
+          <div
+            key={toast.id}
+            className="b-notifications__item"
+            style={{ backgroundColor: `${toast.color}` }}
           >
-            X
-          </button>
-        </div>
-      ))}
-    </div>
-  ) : null;
+            <div>
+              <h3 className="b-notifications__item-title">{toast.type}</h3>
+              <p>{toast.message}</p>
+            </div>
+            <button
+              className="b-notifications__item-btn-close"
+              onClick={() => {
+                dispatch(deleteNotification(toast.id));
+              }}
+            >
+              X
+            </button>
+          </div>
+        ))}
+      </div>
+    )
+  );
 };

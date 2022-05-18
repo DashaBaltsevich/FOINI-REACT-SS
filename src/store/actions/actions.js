@@ -4,7 +4,7 @@ import {
   GET_USERS_SUCCESS,
   ADD_NOTIFICATION,
   DELETE_NOTIFICATION,
-} from './types';
+} from '../constants';
 
 export const setAuthState = (isAuthorised) => {
   return {
@@ -27,8 +27,7 @@ export const onFetchUsersSuccess = (users) => {
   };
 };
 
-export const setNotification = (type, message) => {
-  const id = Math.random().toString(36).substring(2, 9);
+export const setNotification = (type, message, id) => {
   const colors = {
     Error: 'red',
     Success: 'green',
@@ -41,6 +40,17 @@ export const setNotification = (type, message) => {
       id,
       color: colors[type],
     },
+  };
+};
+
+export const setNotificationWithTimeout = (type, message) => {
+  return function (dispatch) {
+    const id = Math.random().toString(36).substring(2, 9);
+    dispatch(setNotification(type, message, id));
+
+    setTimeout(() => {
+      dispatch(deleteNotification(id));
+    }, 3000);
   };
 };
 

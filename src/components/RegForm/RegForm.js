@@ -2,7 +2,7 @@ import { useAsync } from '../../hooks';
 import { signUp } from '../../api/facades';
 import { Preloader } from '../Preloader';
 import { useDispatch } from 'react-redux';
-import { setNotification } from '../../store/actions';
+import { setNotificationWithTimeout } from '../../store/actions';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import './RegForm.scss';
@@ -34,7 +34,7 @@ export const RegForm = ({ setIsRegFormVisible }) => {
       const data = await execute(values);
 
       dispatch(
-        setNotification(
+        setNotificationWithTimeout(
           'Success',
           `${data?.message}` || 'Registration succeeded!',
         ),
@@ -42,7 +42,7 @@ export const RegForm = ({ setIsRegFormVisible }) => {
       setIsRegFormVisible(false);
     } catch (error) {
       return dispatch(
-        setNotification(
+        setNotificationWithTimeout(
           'Error',
           `${error?.response?.data?.message}` ||
             `${error?.message}` ||

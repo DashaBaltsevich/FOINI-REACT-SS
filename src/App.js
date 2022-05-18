@@ -17,7 +17,7 @@ import {
 import {
   setUserInformation,
   setAuthState,
-  setNotification,
+  setNotificationWithTimeout,
 } from './store/actions';
 import './App.scss';
 
@@ -41,7 +41,7 @@ function App() {
         dispatch(setAuthState(true));
       } catch (err) {
         return dispatch(
-          setNotification(
+          setNotificationWithTimeout(
             'Error',
             `${err?.response?.data?.message}` ||
               `${err?.message}` ||
