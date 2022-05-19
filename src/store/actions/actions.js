@@ -48,7 +48,8 @@ export const setNotificationWithTimeout = (type, message) => {
     const id = Math.random().toString(36).substring(2, 9);
     dispatch(setNotification(type, message, id));
 
-    setTimeout(() => {
+    setTimeout(
+      () => {
       dispatch(deleteNotification(id));
     }, 3000);
   };
