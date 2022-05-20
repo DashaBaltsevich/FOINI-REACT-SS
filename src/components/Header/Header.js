@@ -1,8 +1,9 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAsync } from '../../hooks';
 import { signOut } from '../../api/facades';
-import { AuthenticationContext } from '../../contexts';
+import { setAuthState } from '../../store/actions';
+import { useDispatch, useSelector } from 'react-redux';
 import { ModalWindow, LoginForm, RegForm } from '..';
 import { Preloader } from '../Preloader';
 import './Header.scss';
@@ -12,17 +13,17 @@ export const Header = () => {
     isActive ? 'l-nav__link-active l-nav__link' : 'l-nav__link';
   const [isLoginFormVisible, setIsLoginFormVisible] = useState(false);
   const [isRegFormVisible, setIsRegFormVisible] = useState(false);
-  const {
-    state: { isAuthorized },
-    actions: { setAuthState },
-  } = useContext(AuthenticationContext);
+
+  const dispatch = useDispatch();
+  const isAuthorized = useSelector(
+    (state) => state.authenticationReducer.isAuthorized,
+  );
 
   const { execute, loading } = useAsync(signOut, [], [], false);
 
   const handleLogout = async () => {
     await execute();
-
-    setAuthState(false);
+    dispatch(setAuthState(false));
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
   };

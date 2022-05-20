@@ -1,14 +1,14 @@
-import { useContext } from 'react';
-import { NotificationsContext } from '../../contexts';
+import { deleteNotification } from '../../store/actions';
+import { useSelector, useDispatch } from 'react-redux';
 import './Notifications.scss';
 
 export const Notifications = () => {
-  const {
-    state: { notifications },
-    actions: { deleteNotification },
-  } = useContext(NotificationsContext);
+  const dispatch = useDispatch();
+  const notifications = useSelector(
+    (state) => state.notificationsReducer.toasts,
+  );
   return (
-    notifications.length && (
+    !!notifications.length && (
       <div className="b-notifications">
         {notifications.map((toast) => (
           <div
@@ -23,7 +23,7 @@ export const Notifications = () => {
             <button
               className="b-notifications__item-btn-close"
               onClick={() => {
-                deleteNotification(toast.id);
+                dispatch(deleteNotification(toast.id));
               }}
             >
               X

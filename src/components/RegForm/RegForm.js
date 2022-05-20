@@ -1,8 +1,8 @@
-import { useContext } from 'react';
 import { useAsync } from '../../hooks';
 import { signUp } from '../../api/facades';
 import { Preloader } from '../Preloader';
-import { NotificationsContext } from '../../contexts';
+import { useDispatch } from 'react-redux';
+import { setNotificationWithTimeout } from '../../store/actions';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import './RegForm.scss';
@@ -27,25 +27,27 @@ const validationSchema = yup.object({
 
 export const RegForm = ({ setIsRegFormVisible }) => {
   const { execute, loading } = useAsync(signUp, [], [], false);
-  const {
-    actions: { setNotification },
-  } = useContext(NotificationsContext);
+  const dispatch = useDispatch();
 
   const handleFormSubmit = async (values) => {
     try {
       const data = await execute(values);
 
-      setNotification(
-        'Success',
-        `${data?.message}` || 'Registration succeeded!',
+      dispatch(
+        setNotificationWithTimeout(
+          'Success',
+          `${data?.message}` || 'Registration succeeded!',
+        ),
       );
       setIsRegFormVisible(false);
     } catch (error) {
-      return setNotification(
-        'Error',
-        `${error?.response?.data?.message}` ||
-          `${error?.message}` ||
-          `Unknown error!`,
+      return dispatch(
+        setNotificationWithTimeout(
+          'Error',
+          `${error?.response?.data?.message}` ||
+            `${error?.message}` ||
+            `Unknown error!`,
+        ),
       );
     }
   };

@@ -2,8 +2,13 @@ import { useAsync } from '../../hooks';
 import { getUserData } from '../../api/facades';
 import { updateUserData } from '../../api/facades';
 import { Preloader } from '../Preloader';
-import { useEffect, useContext, useState } from 'react';
-import { AuthenticationContext, NotificationsContext } from '../../contexts';
+import { useEffect, useState } from 'react';
+import {
+  setAuthState,
+  setUserInformation,
+  setNotificationWithTimeout,
+} from '../../store/actions';
+import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import './UserData.scss';
@@ -21,14 +26,11 @@ const validationSchema = Yup.object({
 });
 
 export const UserData = () => {
-  const {
-    state: { userInformation },
-    actions: { setUserInformation, setAuthState },
-  } = useContext(AuthenticationContext);
-  const {
-    actions: { setNotification },
-  } = useContext(NotificationsContext);
   const [isEditingEnable, setIsEditingEnable] = useState(false);
+  const dispatch = useDispatch();
+  const userInformation = useSelector(
+    (state) => state.authenticationReducer.userInformation,
+  );
 
   const { execute: getUser, loading: userGetLoading } = useAsync(
     getUserData,
@@ -51,27 +53,29 @@ export const UserData = () => {
 
       try {
         const data = await getUser();
-        setUserInformation(data?.content);
+        dispatch(setUserInformation(data?.content));
       } catch (err) {
-        setAuthState(false);
+        dispatch(setAuthState(false));
         alert(err?.response?.data?.message || err?.message || 'Unknown error!');
       }
     })();
-  }, [userInformation, setUserInformation, setAuthState, getUser]);
+  }, [getUser]);
 
   const handleEditionFormSubmit = async (values) => {
     try {
       const data = await updateUser(values);
 
-      setNotification('Success', 'Data has been updated');
-      setUserInformation(data?.content);
+      dispatch(setNotificationWithTimeout('Success', 'Data has been updated'));
+      dispatch(setUserInformation(data?.content));
       setIsEditingEnable(false);
     } catch (error) {
-      return setNotification(
-        'Error',
-        `${error?.response?.data?.message}` ||
-          `${error?.message}` ||
-          `Unknown error!`,
+      return dispatch(
+        setNotificationWithTimeout(
+          'Error',
+          `${error?.response?.data?.message}` ||
+            `${error?.message}` ||
+            `Unknown error!`,
+        ),
       );
     }
   };
@@ -176,7 +180,10 @@ export const UserData = () => {
                   </div>
 
                   <div>
-                    <button className="f-edit-userdata__btn-submit">
+                    <button
+                      className="f-edit-userdata__btn-submit"
+                      type="submit"
+                    >
                       Сохранить
                     </button>
                     <button

@@ -1,17 +1,15 @@
 import { getUsers } from '../../api/facades';
 import { useAsync } from '../../hooks';
-import { useEffect, useContext } from 'react';
-import { UsersContext } from '../../contexts';
+import { useDispatch, useSelector } from 'react-redux';
+import { onFetchUsersSuccess } from '../../store/actions';
+import { useEffect } from 'react';
 import { Preloader } from '../Preloader';
 import './Users.scss';
 
 export const Users = () => {
-  const {
-    state: { users },
-    actions: { onFetchUsersSuccess },
-  } = useContext(UsersContext);
-
   const { execute, loading } = useAsync(getUsers, [], [], false);
+  const users = useSelector((state) => state.usersReducer.users);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (users.length) {
@@ -23,7 +21,7 @@ export const Users = () => {
         const data = await execute();
 
         if (data?.results) {
-          onFetchUsersSuccess(data.results);
+          dispatch(onFetchUsersSuccess(data.results));
         }
       } catch (error) {
         throw new Error('Error. No data');
