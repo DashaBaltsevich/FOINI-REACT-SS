@@ -5,21 +5,20 @@ import './Users.scss';
 import { connect } from 'react-redux';
 
 class UsersComponent extends Component {
-  componentDidMount() {
+  async componentDidMount() {
     if (this.props.users.length) {
       return;
     }
-    (async () => {
-      try {
-        const data = await getUsers();
 
-        if (data?.results) {
-          this.props.onFetchUsersSuccess(data.results);
-        }
-      } catch (error) {
-        throw new Error('Error. No data');
+    try {
+      const data = await getUsers();
+
+      if (data?.results) {
+        this.props.onFetchUsersSuccess(data.results);
       }
-    })();
+    } catch (error) {
+      throw new Error('Error. No data');
+    }
   }
 
   render() {
@@ -55,17 +54,13 @@ class UsersComponent extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    users: state.usersReducer.users,
-  };
-};
+const mapStateToProps = (state) => ({
+  users: state.usersReducer.users,
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onFetchUsersSuccess: (users) => dispatch(onFetchUsersSuccess(users)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  onFetchUsersSuccess: (users) => dispatch(onFetchUsersSuccess(users)),
+});
 
 export const Users = connect(
   mapStateToProps,

@@ -19,7 +19,7 @@ const validationSchema = yup.object({
 });
 
 class LoginFormComponent extends Component {
-  handleFormSubmit = async (values) => {
+  async handleFormSubmit(values) {
     try {
       const data = await signIn(values);
 
@@ -40,7 +40,7 @@ class LoginFormComponent extends Component {
           `Unknown error!`,
       );
     }
-  };
+  }
 
   render() {
     return (
@@ -104,12 +104,10 @@ class LoginFormComponent extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setAuthState: (isAuthorised) => dispatch(setAuthState(isAuthorised)),
-    setNotificationWithTimeout: (type, message) =>
-      dispatch(setNotificationWithTimeout(type, message)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setAuthState: (isAuthorised) => dispatch(setAuthState(isAuthorised)),
+  setNotificationWithTimeout: (type, message) =>
+    dispatch(setNotificationWithTimeout(type, message)),
+});
 
 export const LoginForm = connect(null, mapDispatchToProps)(LoginFormComponent);

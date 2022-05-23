@@ -25,7 +25,7 @@ const validationSchema = yup.object({
 });
 
 class RegFormComponent extends Component {
-  handleFormSubmit = async (values) => {
+  async handleFormSubmit(values) {
     try {
       const data = await signUp(values);
 
@@ -42,7 +42,7 @@ class RegFormComponent extends Component {
           `Unknown error!`,
       );
     }
-  };
+  }
 
   render() {
     return (
@@ -160,11 +160,9 @@ class RegFormComponent extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setNotificationWithTimeout: (type, message) =>
-      dispatch(setNotificationWithTimeout(type, message)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setNotificationWithTimeout: (type, message) =>
+    dispatch(setNotificationWithTimeout(type, message)),
+});
 
 export const RegForm = connect(null, mapDispatchToProps)(RegFormComponent);

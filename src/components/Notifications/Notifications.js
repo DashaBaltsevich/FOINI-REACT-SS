@@ -34,17 +34,13 @@ class NotificationsComponent extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    notifications: state.notificationsReducer.toasts,
-  };
-};
+const mapStateToProps = (state) => ({
+  notifications: state.notificationsReducer.toasts,
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    deleteNotification: (id) => dispatch(deleteNotification(id)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  deleteNotification: (id) => dispatch(deleteNotification(id)),
+});
 
 export const Notifications = connect(
   mapStateToProps,

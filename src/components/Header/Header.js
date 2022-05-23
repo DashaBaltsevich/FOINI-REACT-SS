@@ -7,8 +7,8 @@ import { setAuthState } from '../../store/actions';
 import { signOut } from '../../api/facades';
 
 class HeaderComponent extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       isLoginFormVisible: false,
       isRegFormVisible: false,
@@ -22,13 +22,13 @@ class HeaderComponent extends Component {
     this.setState({ isLoginFormVisible: true });
   };
 
-  handleLogout = async () => {
+  async handleLogout() {
     await signOut();
     this.props.setAuthState(false);
 
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-  };
+  }
 
   setIsLoginFormState(newState) {
     return this.setState({ isLoginFormVisible: newState });
@@ -123,17 +123,13 @@ class HeaderComponent extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    isAuthorized: state.authenticationReducer.isAuthorized,
-  };
-};
+const mapStateToProps = (state) => ({
+  isAuthorized: state.authenticationReducer.isAuthorized,
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setAuthState: (isAuthorised) => dispatch(setAuthState(isAuthorised)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setAuthState: (isAuthorised) => dispatch(setAuthState(isAuthorised)),
+});
 
 export const Header = connect(
   mapStateToProps,

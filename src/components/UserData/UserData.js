@@ -24,32 +24,30 @@ const validationSchema = Yup.object({
 });
 
 class UserDataComponent extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       isEditingEnable: false,
     };
   }
 
-  componentDidMount() {
-    (async () => {
-      if (this.props.userInformation !== null) {
-        return;
-      }
+  async componentDidMount() {
+    if (this.props.userInformation !== null) {
+      return;
+    }
 
-      try {
-        const data = await getUserData();
-        console.log(data);
-        this.props.setUserInformation(data?.content);
-      } catch (err) {
-        console.dir(err);
-        this.props.setAuthState(false);
-        alert(err?.response?.data?.message || err?.message || 'Unknown error!');
-      }
-    })();
+    try {
+      const data = await getUserData();
+      console.log(data);
+      this.props.setUserInformation(data?.content);
+    } catch (err) {
+      console.dir(err);
+      this.props.setAuthState(false);
+      alert(err?.response?.data?.message || err?.message || 'Unknown error!');
+    }
   }
 
-  handleEditionFormSubmit = async (values) => {
+  async handleEditionFormSubmit(values) {
     try {
       const data = await updateUserData(values);
       this.props.setNotificationWithTimeout('Success', 'Data has been updated');
@@ -63,7 +61,7 @@ class UserDataComponent extends Component {
           `Unknown error!`,
       );
     }
-  };
+  }
 
   render() {
     return (
@@ -209,21 +207,17 @@ class UserDataComponent extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    userInformation: state.authenticationReducer.userInformation,
-  };
-};
+const mapStateToProps = (state) => ({
+  userInformation: state.authenticationReducer.userInformation,
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setAuthState: (isAuthorised) => dispatch(setAuthState(isAuthorised)),
-    setNotificationWithTimeout: (type, message) =>
-      dispatch(setNotificationWithTimeout(type, message)),
-    setUserInformation: (userInformation) =>
-      dispatch(setUserInformation(userInformation)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setAuthState: (isAuthorised) => dispatch(setAuthState(isAuthorised)),
+  setNotificationWithTimeout: (type, message) =>
+    dispatch(setNotificationWithTimeout(type, message)),
+  setUserInformation: (userInformation) =>
+    dispatch(setUserInformation(userInformation)),
+});
 
 export const UserData = connect(
   mapStateToProps,

@@ -20,25 +20,23 @@ import { connect } from 'react-redux';
 import './App.scss';
 
 class AppComponent extends Component {
-  componentDidMount() {
+  async componentDidMount() {
     if (!localStorage.getItem('accessToken')) {
       return;
     }
 
-    (async () => {
-      try {
-        const data = await getUserData();
-        this.props.setUserInformation(data?.content);
-        this.props.setAuthState(true);
-      } catch (err) {
-        this.props.setNotificationWithTimeout(
-          'Error',
-          `${err?.response?.data?.message}` ||
-            `${err?.message}` ||
-            'Unknown error!',
-        );
-      }
-    })();
+    try {
+      const data = await getUserData();
+      this.props.setUserInformation(data?.content);
+      this.props.setAuthState(true);
+    } catch (err) {
+      this.props.setNotificationWithTimeout(
+        'Error',
+        `${err?.response?.data?.message}` ||
+          `${err?.message}` ||
+          'Unknown error!',
+      );
+    }
   }
   render() {
     return (
@@ -64,21 +62,17 @@ class AppComponent extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    isAuthorized: state.authenticationReducer.isAuthorized,
-  };
-};
+const mapStateToProps = (state) => ({
+  isAuthorized: state.authenticationReducer.isAuthorized,
+});
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setAuthState: (isAuthorised) => dispatch(setAuthState(isAuthorised)),
-    setNotificationWithTimeout: (type, message) =>
-      dispatch(setNotificationWithTimeout(type, message)),
-    setUserInformation: (userInformation) =>
-      dispatch(setUserInformation(userInformation)),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  setAuthState: (isAuthorised) => dispatch(setAuthState(isAuthorised)),
+  setNotificationWithTimeout: (type, message) =>
+    dispatch(setNotificationWithTimeout(type, message)),
+  setUserInformation: (userInformation) =>
+    dispatch(setUserInformation(userInformation)),
+});
 
 const App = connect(mapStateToProps, mapDispatchToProps)(AppComponent);
 export default App;
