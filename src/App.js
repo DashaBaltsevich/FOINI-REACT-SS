@@ -1,9 +1,6 @@
-import { useAsync } from './hooks';
 import { getUserData } from './api/facades';
-import { Preloader } from './components/Preloader';
-import { useEffect } from 'react';
+import { Component } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   Header,
   Footer,
@@ -19,60 +16,69 @@ import {
   setAuthState,
   setNotificationWithTimeout,
 } from './store/actions';
+import { connect } from 'react-redux';
 import './App.scss';
 
-function App() {
-  const { execute, loading } = useAsync(getUserData, [], [], false);
-
-  const dispatch = useDispatch();
-  const isAuthorized = useSelector(
-    (state) => state.authenticationReducer.isAuthorized,
-  );
-
-  useEffect(() => {
+class AppComponent extends Component {
+  componentDidMount() {
     if (!localStorage.getItem('accessToken')) {
       return;
     }
 
     (async () => {
       try {
-        const data = await execute();
-        dispatch(setUserInformation(data?.content));
-        dispatch(setAuthState(true));
+        const data = await getUserData();
+        this.props.setUserInformation(data?.content);
+        this.props.setAuthState(true);
       } catch (err) {
-        return dispatch(
-          setNotificationWithTimeout(
-            'Error',
-            `${err?.response?.data?.message}` ||
-              `${err?.message}` ||
-              'Unknown error!',
-          ),
+        this.props.setNotificationWithTimeout(
+          'Error',
+          `${err?.response?.data?.message}` ||
+            `${err?.message}` ||
+            'Unknown error!',
         );
       }
     })();
-  }, []);
-
-  return (
-    <div>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="services" element={<Services />} />
-        <Route path="users" element={<Users />} />
-        <Route
-          path="/me"
-          element={
-            <PrivateRoute isAllowed={isAuthorized}>
-              <UserData />
-            </PrivateRoute>
-          }
-        />
-      </Routes>
-      {loading ? <Preloader /> : null}
-      <Footer />
-      <Notifications />
-    </div>
-  );
+  }
+  render() {
+    return (
+      <div>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="services" element={<Services />} />
+          <Route path="users" element={<Users />} />
+          <Route
+            path="/me"
+            element={
+              <PrivateRoute isAllowed={this.props.isAuthorized}>
+                <UserData />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+        <Footer />
+        <Notifications />
+      </div>
+    );
+  }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    isAuthorized: state.authenticationReducer.isAuthorized,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setAuthState: (isAuthorised) => dispatch(setAuthState(isAuthorised)),
+    setNotificationWithTimeout: (type, message) =>
+      dispatch(setNotificationWithTimeout(type, message)),
+    setUserInformation: (userInformation) =>
+      dispatch(setUserInformation(userInformation)),
+  };
+};
+
+const App = connect(mapStateToProps, mapDispatchToProps)(AppComponent);
 export default App;

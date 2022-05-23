@@ -1,111 +1,141 @@
-import { useState } from 'react';
+import { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useAsync } from '../../hooks';
-import { signOut } from '../../api/facades';
-import { setAuthState } from '../../store/actions';
-import { useDispatch, useSelector } from 'react-redux';
 import { ModalWindow, LoginForm, RegForm } from '..';
-import { Preloader } from '../Preloader';
 import './Header.scss';
+import { connect } from 'react-redux';
+import { setAuthState } from '../../store/actions';
+import { signOut } from '../../api/facades';
 
-export const Header = () => {
-  const setActive = ({ isActive }) =>
-    isActive ? 'l-nav__link-active l-nav__link' : 'l-nav__link';
-  const [isLoginFormVisible, setIsLoginFormVisible] = useState(false);
-  const [isRegFormVisible, setIsRegFormVisible] = useState(false);
+class HeaderComponent extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isLoginFormVisible: false,
+      isRegFormVisible: false,
+    };
+    this.loginClick = this.loginClick.bind(this);
+    this.setIsLoginFormState = this.setIsLoginFormState.bind(this);
+    this.setIsRegFormVisible = this.setIsRegFormVisible.bind(this);
+  }
 
-  const dispatch = useDispatch();
-  const isAuthorized = useSelector(
-    (state) => state.authenticationReducer.isAuthorized,
-  );
+  loginClick = () => {
+    this.setState({ isLoginFormVisible: true });
+  };
 
-  const { execute, loading } = useAsync(signOut, [], [], false);
+  handleLogout = async () => {
+    await signOut();
+    this.props.setAuthState(false);
 
-  const handleLogout = async () => {
-    await execute();
-    dispatch(setAuthState(false));
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
   };
 
-  return (
-    <>
-      {loading && <Preloader />}
-      <header className="header">
-        <div className="container">
-          <div className="header__inner">
-            <div className="header__logo">
-              <NavLink to="/">
-                <img src="./img/logo.png" className="App-logo" alt="logo" />
-              </NavLink>
-            </div>
-            <nav className="header__nav">
-              <ul className="l-nav">
-                <li className="l-nav__item">
-                  <NavLink to="/" className={setActive}>
-                    Home
-                  </NavLink>
-                </li>
-                <li className="l-nav__item">
-                  <NavLink to="/services" className={setActive}>
-                    Services
-                  </NavLink>
-                </li>
-                <li className="l-nav__item">
-                  <NavLink to="/users" className={setActive}>
-                    Users
-                  </NavLink>
-                </li>
-              </ul>
-            </nav>
+  setIsLoginFormState(newState) {
+    return this.setState({ isLoginFormVisible: newState });
+  }
 
-            {isAuthorized ? (
-              <>
-                <NavLink to="/me" className={setActive}>
-                  My account
+  setIsRegFormVisible(newState) {
+    return this.setState({ isRegFormVisible: newState });
+  }
+
+  render() {
+    const setActive = ({ isActive }) =>
+      isActive ? 'l-nav__link-active l-nav__link' : 'l-nav__link';
+
+    const isAuthorized = this.props.isAuthorized;
+
+    return (
+      <>
+        <header className="header">
+          <div className="container">
+            <div className="header__inner">
+              <div className="header__logo">
+                <NavLink to="/">
+                  <img src="./img/logo.png" className="App-logo" alt="logo" />
                 </NavLink>
-                <button className="btn-login" onClick={handleLogout}>
-                  Log Out
-                </button>
-              </>
-            ) : (
-              <div className="btn-login__wrapper">
-                <button
-                  className="btn-login"
-                  onClick={() => setIsLoginFormVisible(true)}
-                >
-                  Sign in
-                </button>
-                <button
-                  className="btn-login"
-                  onClick={() => setIsRegFormVisible(true)}
-                >
-                  Sign up
-                </button>
               </div>
-            )}
-          </div>
-        </div>
-      </header>
+              <nav className="header__nav">
+                <ul className="l-nav">
+                  <li className="l-nav__item">
+                    <NavLink to="/" className={setActive}>
+                      Home
+                    </NavLink>
+                  </li>
+                  <li className="l-nav__item">
+                    <NavLink to="/services" className={setActive}>
+                      Services
+                    </NavLink>
+                  </li>
+                  <li className="l-nav__item">
+                    <NavLink to="/users" className={setActive}>
+                      Users
+                    </NavLink>
+                  </li>
+                </ul>
+              </nav>
 
-      {isLoginFormVisible && (
-        <ModalWindow
-          onClose={() => {
-            setIsLoginFormVisible(false);
-          }}
-        >
-          <LoginForm setIsLoginFormVisible={setIsLoginFormVisible} />
-        </ModalWindow>
-      )}
-      {isRegFormVisible && (
-        <ModalWindow
-          onClose={() => {
-            setIsRegFormVisible(false);
-          }}
-        >
-          <RegForm setIsRegFormVisible={setIsRegFormVisible} />
-        </ModalWindow>
-      )}
-    </>
-  );
+              {isAuthorized ? (
+                <>
+                  <NavLink to="/me" className={setActive}>
+                    My account
+                  </NavLink>
+                  <button className="btn-login" onClick={this.handleLogout}>
+                    Log Out
+                  </button>
+                </>
+              ) : (
+                <div className="btn-login__wrapper">
+                  <button className="btn-login" onClick={this.loginClick}>
+                    Sign in
+                  </button>
+                  <button
+                    className="btn-login"
+                    onClick={() => this.setState({ isRegFormVisible: true })}
+                  >
+                    Sign up
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </header>
+
+        {this.state.isLoginFormVisible && (
+          <ModalWindow
+            onClose={() => {
+              this.setState({ isLoginFormVisible: false });
+            }}
+          >
+            <LoginForm setIsLoginFormState={this.setIsLoginFormState} />
+          </ModalWindow>
+        )}
+        {this.state.isRegFormVisible && (
+          <ModalWindow
+            onClose={() => {
+              this.setState({ isRegFormVisible: false });
+            }}
+          >
+            <RegForm setIsRegFormVisible={this.setIsRegFormVisible} />
+          </ModalWindow>
+        )}
+      </>
+    );
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    isAuthorized: state.authenticationReducer.isAuthorized,
+  };
 };
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setAuthState: (isAuthorised) => dispatch(setAuthState(isAuthorised)),
+  };
+};
+
+export const Header = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(HeaderComponent);

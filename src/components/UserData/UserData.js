@@ -1,17 +1,15 @@
-import { useAsync } from '../../hooks';
 import { getUserData } from '../../api/facades';
 import { updateUserData } from '../../api/facades';
-import { Preloader } from '../Preloader';
-import { useEffect, useState } from 'react';
+import { Component } from 'react';
 import {
   setAuthState,
   setUserInformation,
   setNotificationWithTimeout,
 } from '../../store/actions';
-import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import './UserData.scss';
+import { connect } from 'react-redux';
 
 const validationSchema = Yup.object({
   firstName: Yup.string().defined('First Name must be defined'),
@@ -25,68 +23,53 @@ const validationSchema = Yup.object({
     .min(4, 'Must be more than 4 characters'),
 });
 
-export const UserData = () => {
-  const [isEditingEnable, setIsEditingEnable] = useState(false);
-  const dispatch = useDispatch();
-  const userInformation = useSelector(
-    (state) => state.authenticationReducer.userInformation,
-  );
+class UserDataComponent extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isEditingEnable: false,
+    };
+  }
 
-  const { execute: getUser, loading: userGetLoading } = useAsync(
-    getUserData,
-    [],
-    [],
-    false,
-  );
-  const { execute: updateUser, loading: userUpdateLoading } = useAsync(
-    updateUserData,
-    [],
-    [],
-    false,
-  );
-
-  useEffect(() => {
+  componentDidMount() {
     (async () => {
-      if (userInformation !== null) {
+      if (this.props.userInformation !== null) {
         return;
       }
 
       try {
-        const data = await getUser();
-        dispatch(setUserInformation(data?.content));
+        const data = await getUserData();
+        console.log(data);
+        this.props.setUserInformation(data?.content);
       } catch (err) {
-        dispatch(setAuthState(false));
+        console.dir(err);
+        this.props.setAuthState(false);
         alert(err?.response?.data?.message || err?.message || 'Unknown error!');
       }
     })();
-  }, [getUser]);
+  }
 
-  const handleEditionFormSubmit = async (values) => {
+  handleEditionFormSubmit = async (values) => {
     try {
-      const data = await updateUser(values);
-
-      dispatch(setNotificationWithTimeout('Success', 'Data has been updated'));
-      dispatch(setUserInformation(data?.content));
-      setIsEditingEnable(false);
+      const data = await updateUserData(values);
+      this.props.setNotificationWithTimeout('Success', 'Data has been updated');
+      this.props.setUserInformation(data?.content);
+      this.setState({ isEditingEnable: false });
     } catch (error) {
-      return dispatch(
-        setNotificationWithTimeout(
-          'Error',
-          `${error?.response?.data?.message}` ||
-            `${error?.message}` ||
-            `Unknown error!`,
-        ),
+      this.props.setNotificationWithTimeout(
+        'Error',
+        `${error?.response?.data?.message}` ||
+          `${error?.message}` ||
+          `Unknown error!`,
       );
     }
   };
 
-  return (
-    <div className="s-userdata">
-      {userGetLoading || userUpdateLoading ? (
-        <Preloader />
-      ) : (
+  render() {
+    return (
+      <div className="s-userdata">
         <div className="container">
-          {isEditingEnable ? (
+          {this.state.isEditingEnable ? (
             <Formik
               initialValues={{
                 firstName: '',
@@ -95,7 +78,7 @@ export const UserData = () => {
                 password: '',
               }}
               validationSchema={validationSchema}
-              onSubmit={(values) => handleEditionFormSubmit(values)}
+              onSubmit={(values) => this.handleEditionFormSubmit(values)}
             >
               {({ values }) => (
                 <Form className="f-edit-userdata">
@@ -190,7 +173,7 @@ export const UserData = () => {
                       className="f-edit-userdata__btn-cancel"
                       onClick={(e) => {
                         e.preventDefault();
-                        setIsEditingEnable(false);
+                        this.setState({ isEditingEnable: false });
                       }}
                     >
                       Отмена
@@ -203,25 +186,46 @@ export const UserData = () => {
             <>
               <ul className="l-userdata">
                 <li className="l-userdata__item">
-                  Имя: {userInformation?.firstName}
+                  Имя: {this.props.userInformation?.firstName}
                 </li>
                 <li className="l-userdata__item">
-                  Фамилия: {userInformation?.lastName}
+                  Фамилия: {this.props.userInformation?.lastName}
                 </li>
                 <li className="l-userdata__item">
-                  Почта: {userInformation?.email}
+                  Почта: {this.props.userInformation?.email}
                 </li>
               </ul>
               <button
                 className="btn-userdata-edit"
-                onClick={() => setIsEditingEnable(true)}
+                onClick={() => this.setState({ isEditingEnable: true })}
               >
                 Редактировать
               </button>
             </>
           )}
         </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    userInformation: state.authenticationReducer.userInformation,
+  };
 };
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setAuthState: (isAuthorised) => dispatch(setAuthState(isAuthorised)),
+    setNotificationWithTimeout: (type, message) =>
+      dispatch(setNotificationWithTimeout(type, message)),
+    setUserInformation: (userInformation) =>
+      dispatch(setUserInformation(userInformation)),
+  };
+};
+
+export const UserData = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(UserDataComponent);

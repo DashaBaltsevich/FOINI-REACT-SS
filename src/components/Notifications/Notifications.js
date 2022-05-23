@@ -1,36 +1,52 @@
 import { deleteNotification } from '../../store/actions';
-import { useSelector, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import './Notifications.scss';
+import { Component } from 'react';
 
-export const Notifications = () => {
-  const dispatch = useDispatch();
-  const notifications = useSelector(
-    (state) => state.notificationsReducer.toasts,
-  );
-  return (
-    !!notifications.length && (
-      <div className="b-notifications">
-        {notifications.map((toast) => (
-          <div
-            key={toast.id}
-            className="b-notifications__item"
-            style={{ backgroundColor: `${toast.color}` }}
-          >
-            <div>
-              <h3 className="b-notifications__item-title">{toast.type}</h3>
-              <p>{toast.message}</p>
-            </div>
-            <button
-              className="b-notifications__item-btn-close"
-              onClick={() => {
-                dispatch(deleteNotification(toast.id));
-              }}
+class NotificationsComponent extends Component {
+  render() {
+    return (
+      !!this.props.notifications.length && (
+        <div className="b-notifications">
+          {this.props.notifications.map((toast) => (
+            <div
+              key={toast.id}
+              className="b-notifications__item"
+              style={{ backgroundColor: `${toast.color}` }}
             >
-              X
-            </button>
-          </div>
-        ))}
-      </div>
-    )
-  );
+              <div>
+                <h3 className="b-notifications__item-title">{toast.type}</h3>
+                <p>{toast.message}</p>
+              </div>
+              <button
+                className="b-notifications__item-btn-close"
+                onClick={() => {
+                  this.props.deleteNotification(toast.id);
+                }}
+              >
+                X
+              </button>
+            </div>
+          ))}
+        </div>
+      )
+    );
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    notifications: state.notificationsReducer.toasts,
+  };
 };
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    deleteNotification: (id) => dispatch(deleteNotification(id)),
+  };
+};
+
+export const Notifications = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(NotificationsComponent);

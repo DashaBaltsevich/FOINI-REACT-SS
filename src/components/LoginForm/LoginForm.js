@@ -1,11 +1,10 @@
 import { setAuthState, setNotificationWithTimeout } from '../../store/actions';
-import { useDispatch } from 'react-redux';
-import { useAsync } from '../../hooks';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
-import { Preloader } from '../Preloader';
-import { signIn } from '../../api/facades';
 import './LoginForm.scss';
+import { Component } from 'react';
+import { connect } from 'react-redux';
+import { signIn } from '../../api/facades';
 
 const validationSchema = yup.object({
   email: yup
@@ -19,39 +18,32 @@ const validationSchema = yup.object({
     .min(4, 'Must be more than 4 characters'),
 });
 
-export const LoginForm = ({ setIsLoginFormVisible }) => {
-  const { execute, loading } = useAsync(signIn, [], [], false);
-
-  const dispatch = useDispatch();
-
-  const handleFormSubmit = async (values) => {
+class LoginFormComponent extends Component {
+  handleFormSubmit = async (values) => {
     try {
-      const data = await execute(values);
+      const data = await signIn(values);
 
-      dispatch(setAuthState(true));
-      setIsLoginFormVisible(false);
-      dispatch(
-        setNotificationWithTimeout('Success', 'Authentication successful'),
+      this.props.setAuthState(true);
+      this.props.setIsLoginFormState(false);
+      this.props.setNotificationWithTimeout(
+        'Success',
+        'Authentication successful',
       );
 
       localStorage.setItem('accessToken', data?.content.token.accessToken);
       localStorage.setItem('refreshToken', data?.content.token.refreshToken);
     } catch (err) {
-      return dispatch(
-        setNotificationWithTimeout(
-          'Error',
-          `${err?.response?.data?.message}` ||
-            `${err?.message}` ||
-            `Unknown error!`,
-        ),
+      this.props.setNotificationWithTimeout(
+        'Error',
+        `${err?.response?.data?.message}` ||
+          `${err?.message}` ||
+          `Unknown error!`,
       );
     }
   };
 
-  return (
-    <>
-      {loading && <Preloader />}
-
+  render() {
+    return (
       <Formik
         initialValues={{
           email: '',
@@ -59,7 +51,7 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
         }}
         validateOnBlur={false}
         validationSchema={validationSchema}
-        onSubmit={(values) => handleFormSubmit(values)}
+        onSubmit={(values) => this.handleFormSubmit(values)}
       >
         {({ values }) => (
           <Form className="f-login">
@@ -108,6 +100,16 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
           </Form>
         )}
       </Formik>
-    </>
-  );
+    );
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setAuthState: (isAuthorised) => dispatch(setAuthState(isAuthorised)),
+    setNotificationWithTimeout: (type, message) =>
+      dispatch(setNotificationWithTimeout(type, message)),
+  };
 };
+
+export const LoginForm = connect(null, mapDispatchToProps)(LoginFormComponent);
