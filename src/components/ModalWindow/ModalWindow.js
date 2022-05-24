@@ -1,28 +1,35 @@
-import { useEffect } from 'react';
+import { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './ModalWindow.scss';
 
-export const ModalWindow = ({ children, onClose }) => {
-  const div = document.createElement('div');
+export class ModalWindow extends Component {
+  constructor(props) {
+    super(props);
+    this.div = document.createElement('div');
+  }
 
-  useEffect(() => {
-    div.setAttribute('class', 'b-modal-window');
-    document.body.appendChild(div);
+  componentDidMount() {
+    this.div.setAttribute('class', 'b-modal-window');
+    document.body.appendChild(this.div);
     document.querySelector('body').style.overflow = 'hidden';
+  }
 
-    return () => {
-      div.remove();
-      document.querySelector('body').style.overflow = 'auto';
-    };
-  }, [div]);
-
-  return ReactDOM.createPortal(
-    <>
-      {children}
-      <button onClick={onClose} className="b-modal-window__btn-close">
-        Закрыть
-      </button>
-    </>,
-    div,
-  );
-};
+  componentWillUnmount() {
+    this.div.remove();
+    document.querySelector('body').style.overflow = 'auto';
+  }
+  render() {
+    return ReactDOM.createPortal(
+      <>
+        {this.props.children}
+        <button
+          onClick={this.props.onClose}
+          className="b-modal-window__btn-close"
+        >
+          Закрыть
+        </button>
+      </>,
+      this.div,
+    );
+  }
+}

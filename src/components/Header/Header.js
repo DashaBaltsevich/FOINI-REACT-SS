@@ -14,6 +14,7 @@ class HeaderComponent extends Component {
       isRegFormVisible: false,
     };
     this.loginClick = this.loginClick.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
     this.setIsLoginFormState = this.setIsLoginFormState.bind(this);
     this.setIsRegFormVisible = this.setIsRegFormVisible.bind(this);
   }
@@ -31,11 +32,11 @@ class HeaderComponent extends Component {
   }
 
   setIsLoginFormState(newState) {
-    return this.setState({ isLoginFormVisible: newState });
+    this.setState({ isLoginFormVisible: newState });
   }
 
   setIsRegFormVisible(newState) {
-    return this.setState({ isRegFormVisible: newState });
+    this.setState({ isRegFormVisible: newState });
   }
 
   render() {

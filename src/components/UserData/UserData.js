@@ -38,10 +38,8 @@ class UserDataComponent extends Component {
 
     try {
       const data = await getUserData();
-      console.log(data);
       this.props.setUserInformation(data?.content);
     } catch (err) {
-      console.dir(err);
       this.props.setAuthState(false);
       alert(err?.response?.data?.message || err?.message || 'Unknown error!');
     }
