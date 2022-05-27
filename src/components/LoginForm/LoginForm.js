@@ -1,10 +1,11 @@
 import { setAuthState, setNotificationWithTimeout } from '../../store/actions';
 import { useDispatch } from 'react-redux';
-import { useAsync } from '../../hooks';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
+import { useState } from 'react';
 import { Preloader } from '../Preloader';
 import { signIn } from '../../api/facades';
+import { useQuery } from 'react-query';
 import './LoginForm.scss';
 
 const validationSchema = yup.object({
@@ -20,37 +21,42 @@ const validationSchema = yup.object({
 });
 
 export const LoginForm = ({ setIsLoginFormVisible }) => {
-  const { execute, loading } = useAsync(signIn, [], [], false);
-
   const dispatch = useDispatch();
+  const [formData, setFormData] = useState(null);
 
-  const handleFormSubmit = async (values) => {
-    try {
-      const data = await execute(values);
+  const { isLoading } = useQuery(
+    formData && ['signIn', formData],
+    () => signIn(formData),
+    {
+      enabled: !!formData,
+      retry: false,
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        dispatch(setAuthState(true));
+        setIsLoginFormVisible(false);
+        dispatch(
+          setNotificationWithTimeout('Success', 'Authentication successful'),
+        );
 
-      dispatch(setAuthState(true));
-      setIsLoginFormVisible(false);
-      dispatch(
-        setNotificationWithTimeout('Success', 'Authentication successful'),
-      );
-
-      localStorage.setItem('accessToken', data?.content.token.accessToken);
-      localStorage.setItem('refreshToken', data?.content.token.refreshToken);
-    } catch (err) {
-      return dispatch(
-        setNotificationWithTimeout(
-          'Error',
-          `${err?.response?.data?.message}` ||
-            `${err?.message}` ||
-            `Unknown error!`,
-        ),
-      );
-    }
-  };
+        localStorage.setItem('accessToken', data?.content.token.accessToken);
+        localStorage.setItem('refreshToken', data?.content.token.refreshToken);
+      },
+      onError: (error) => {
+        dispatch(
+          setNotificationWithTimeout(
+            'Error',
+            `${error?.response?.data?.message}` ||
+              `${error?.message}` ||
+              `Unknown error!`,
+          ),
+        );
+      },
+    },
+  );
 
   return (
     <>
-      {loading && <Preloader />}
+      {isLoading && <Preloader />}
 
       <Formik
         initialValues={{
@@ -59,7 +65,7 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
         }}
         validateOnBlur={false}
         validationSchema={validationSchema}
-        onSubmit={(values) => handleFormSubmit(values)}
+        onSubmit={(values) => setFormData(values)}
       >
         {({ values }) => (
           <Form className="f-login">

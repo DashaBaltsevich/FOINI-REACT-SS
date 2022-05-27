@@ -1,4 +1,5 @@
-import { useAsync } from '../../hooks';
+import { useQuery } from 'react-query';
+import { useState } from 'react';
 import { signUp } from '../../api/facades';
 import { Preloader } from '../Preloader';
 import { useDispatch } from 'react-redux';
@@ -26,35 +27,41 @@ const validationSchema = yup.object({
 });
 
 export const RegForm = ({ setIsRegFormVisible }) => {
-  const { execute, loading } = useAsync(signUp, [], [], false);
+  const [formData, setFormData] = useState(null);
   const dispatch = useDispatch();
 
-  const handleFormSubmit = async (values) => {
-    try {
-      const data = await execute(values);
-
-      dispatch(
-        setNotificationWithTimeout(
-          'Success',
-          `${data?.message}` || 'Registration succeeded!',
-        ),
-      );
-      setIsRegFormVisible(false);
-    } catch (error) {
-      return dispatch(
-        setNotificationWithTimeout(
-          'Error',
-          `${error?.response?.data?.message}` ||
-            `${error?.message}` ||
-            `Unknown error!`,
-        ),
-      );
-    }
-  };
+  const { isLoading } = useQuery(
+    formData && ['signUp', formData],
+    () => signUp(formData),
+    {
+      enabled: !!formData,
+      retry: false,
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        dispatch(
+          setNotificationWithTimeout(
+            'Success',
+            `${data?.message}` || 'Registration succeeded!',
+          ),
+        );
+        setIsRegFormVisible(false);
+      },
+      onError: (error) => {
+        dispatch(
+          setNotificationWithTimeout(
+            'Error',
+            `${error?.response?.data?.message}` ||
+              `${error?.message}` ||
+              `Unknown error!`,
+          ),
+        );
+      },
+    },
+  );
 
   return (
     <>
-      {loading && <Preloader />}
+      {isLoading && <Preloader />}
 
       <Formik
         initialValues={{
@@ -65,7 +72,7 @@ export const RegForm = ({ setIsRegFormVisible }) => {
         }}
         validateOnBlur={false}
         validationSchema={validationSchema}
-        onSubmit={(values) => handleFormSubmit(values)}
+        onSubmit={(values) => setFormData(values)}
       >
         {({ values }) => (
           <Form className="f-registration">
