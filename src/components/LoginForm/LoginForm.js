@@ -24,35 +24,35 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState(null);
 
-  const { isLoading } = useQuery(
-    formData && ['signIn', formData],
-    () => signIn(formData),
-    {
-      enabled: !!formData,
-      retry: false,
-      refetchOnWindowFocus: false,
-      onSuccess: (data) => {
-        dispatch(setAuthState(true));
-        setIsLoginFormVisible(false);
-        dispatch(
-          setNotificationWithTimeout('Success', 'Authentication successful'),
-        );
+  const onSuccess = (data) => {
+    dispatch(setAuthState(true));
+    setIsLoginFormVisible(false);
+    dispatch(
+      setNotificationWithTimeout('Success', 'Authentication successful'),
+    );
 
-        localStorage.setItem('accessToken', data?.content.token.accessToken);
-        localStorage.setItem('refreshToken', data?.content.token.refreshToken);
-      },
-      onError: (error) => {
-        dispatch(
-          setNotificationWithTimeout(
-            'Error',
-            `${error?.response?.data?.message}` ||
-              `${error?.message}` ||
-              `Unknown error!`,
-          ),
-        );
-      },
-    },
-  );
+    localStorage.setItem('accessToken', data?.content.token.accessToken);
+    localStorage.setItem('refreshToken', data?.content.token.refreshToken);
+  };
+
+  const onError = (error) => {
+    dispatch(
+      setNotificationWithTimeout(
+        'Error',
+        `${error?.response?.data?.message}` ||
+          `${error?.message}` ||
+          `Unknown error!`,
+      ),
+    );
+  };
+
+  const { isLoading } = useQuery('signIn', () => signIn(formData), {
+    enabled: !!formData,
+    retry: false,
+    refetchOnWindowFocus: false,
+    onSuccess: onSuccess,
+    onError: onError,
+  });
 
   return (
     <>

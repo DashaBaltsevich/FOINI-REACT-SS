@@ -30,34 +30,34 @@ export const RegForm = ({ setIsRegFormVisible }) => {
   const [formData, setFormData] = useState(null);
   const dispatch = useDispatch();
 
-  const { isLoading } = useQuery(
-    formData && ['signUp', formData],
-    () => signUp(formData),
-    {
-      enabled: !!formData,
-      retry: false,
-      refetchOnWindowFocus: false,
-      onSuccess: (data) => {
-        dispatch(
-          setNotificationWithTimeout(
-            'Success',
-            `${data?.message}` || 'Registration succeeded!',
-          ),
-        );
-        setIsRegFormVisible(false);
-      },
-      onError: (error) => {
-        dispatch(
-          setNotificationWithTimeout(
-            'Error',
-            `${error?.response?.data?.message}` ||
-              `${error?.message}` ||
-              `Unknown error!`,
-          ),
-        );
-      },
-    },
-  );
+  const onSuccess = (data) => {
+    dispatch(
+      setNotificationWithTimeout(
+        'Success',
+        `${data?.message}` || 'Registration succeeded!',
+      ),
+    );
+    setIsRegFormVisible(false);
+  };
+
+  const onError = (error) => {
+    dispatch(
+      setNotificationWithTimeout(
+        'Error',
+        `${error?.response?.data?.message}` ||
+          `${error?.message}` ||
+          `Unknown error!`,
+      ),
+    );
+  };
+
+  const { isLoading } = useQuery('signUp', () => signUp(formData), {
+    enabled: !!formData,
+    retry: false,
+    refetchOnWindowFocus: false,
+    onSuccess: onSuccess,
+    onError: onError,
+  });
 
   return (
     <>
