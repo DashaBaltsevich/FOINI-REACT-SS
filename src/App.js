@@ -13,6 +13,7 @@ import {
   Users,
   PrivateRoute,
   Notifications,
+  Chat,
 } from './components';
 import {
   setUserInformation,
@@ -64,6 +65,14 @@ function App() {
           element={
             <PrivateRoute isAllowed={isAuthorized}>
               <UserData />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <PrivateRoute isAllowed={isAuthorized}>
+              <Chat />
             </PrivateRoute>
           }
         />
