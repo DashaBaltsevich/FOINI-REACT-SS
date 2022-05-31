@@ -13,26 +13,40 @@ const validationSchema = yup.object({
 });
 
 export const Chat = () => {
-  const [userMessages, setUserMessages] = useState([]);
+  const [userMessages, setUserMessages] = useState({ id: null, chat: [] });
   const [isConnected, setIsConnected] = useState(false);
   const socket = useRef();
   const dispatch = useDispatch();
 
+  const scrollToBottom = () => {
+    let messages = document.querySelector('.l-chat');
+    if (messages && userMessages.chat.length) {
+      messages.lastElementChild.scrollIntoView();
+    }
+  };
+
   const wsReducer = (action) => {
     switch (action.type) {
       case 'INIT':
-        return setUserMessages(action.payload.chatHistory);
+        setUserMessages({
+          id: action.payload.id,
+          chat: action.payload.chatHistory,
+        });
+        break;
       case 'NEW_MESSAGE':
-        return setUserMessages((prevState) => [...prevState, action.payload]);
-      default:
-        return userMessages;
+        setUserMessages((prevState) => {
+          return {
+            ...prevState,
+            chat: [...prevState.chat, action.payload],
+          };
+        });
+        break;
     }
   };
 
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     if (socket.current) {
-      setIsConnected(true);
       return;
     }
     socket.current = new WebSocket(
@@ -40,6 +54,7 @@ export const Chat = () => {
     );
     socket.current.onopen = () => {
       console.log('connection');
+      setIsConnected(true);
     };
     socket.current.onmessage = (e) => {
       const action = JSON.parse(e.data);
@@ -58,16 +73,17 @@ export const Chat = () => {
       payload: text,
     };
     socket.current.send(JSON.stringify(action));
-    console.log(userMessages);
+    document.querySelector('.f-chat').reset();
+    scrollToBottom();
   };
 
   return (
     <section className="s-chat">
       <div className="container">
         <h2 className="s-chat__title">Chat</h2>
-        {userMessages.length ? (
+        {userMessages.chat.length ? (
           <ul className="l-chat">
-            {userMessages.map((item) => (
+            {userMessages.chat.map((item) => (
               <li className="l-chat__item" key={item.id}>
                 <img src={item.author.photo} alt={item.author.name} />
                 <div className="l-chat__item-text-wrapper">

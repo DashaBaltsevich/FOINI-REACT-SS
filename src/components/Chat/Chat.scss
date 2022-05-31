@@ -4,7 +4,7 @@
     min-height: calc(100vh - #{$header-height} - #{$footer-height});
     background-color: #f8f4ee;
     padding-top: 40px;
-    padding-bottom: 10px;
+    padding-bottom: 40px;
     &__title {
         font-size: 32px;
         margin-bottom: 20px;
@@ -19,7 +19,8 @@
 .l-chat {
     max-width: 500px;
     max-height: 400px;
-    overflow: auto;
+    overflow-y: auto;
+    scroll-behavior: smooth;
     margin: 0 auto;
     margin-bottom: 40px;
 
