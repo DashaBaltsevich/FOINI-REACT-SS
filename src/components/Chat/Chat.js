@@ -18,13 +18,6 @@ export const Chat = () => {
   const socket = useRef();
   const dispatch = useDispatch();
 
-  const scrollToBottom = () => {
-    let messages = document.querySelector('.l-chat');
-    if (messages && userMessages.chat.length) {
-      messages.lastElementChild.scrollIntoView();
-    }
-  };
-
   const wsReducer = (action) => {
     switch (action.type) {
       case 'INIT':
@@ -53,7 +46,6 @@ export const Chat = () => {
       `wss://infinite-woodland-61407.herokuapp.com/ws/chat?token=${accessToken}`,
     );
     socket.current.onopen = () => {
-      console.log('connection');
       setIsConnected(true);
     };
     socket.current.onmessage = (e) => {
@@ -67,6 +59,13 @@ export const Chat = () => {
     };
   }, []);
 
+  useEffect(() => {
+    let messages = document.querySelector('.l-chat');
+    if (messages) {
+      messages.lastElementChild.scrollIntoView();
+    }
+  }, [userMessages]);
+
   const handleFormSubmit = ({ text }) => {
     const action = {
       type: 'NEW_MESSAGE',
@@ -74,7 +73,6 @@ export const Chat = () => {
     };
     socket.current.send(JSON.stringify(action));
     document.querySelector('.f-chat').reset();
-    scrollToBottom();
   };
 
   return (
