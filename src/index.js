@@ -9,7 +9,14 @@ import reportWebVitals from './reportWebVitals';
 import './index.scss';
 
 const root = createRoot(document.getElementById('root'));
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 root.render(
   <React.StrictMode>

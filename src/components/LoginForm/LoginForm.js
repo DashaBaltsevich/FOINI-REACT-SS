@@ -48,8 +48,6 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
 
   const { isLoading } = useQuery('signIn', () => signIn(formData), {
     enabled: !!formData,
-    retry: false,
-    refetchOnWindowFocus: false,
     onSuccess: onSuccess,
     onError: onError,
   });

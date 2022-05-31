@@ -53,8 +53,6 @@ export const RegForm = ({ setIsRegFormVisible }) => {
 
   const { isLoading } = useQuery('signUp', () => signUp(formData), {
     enabled: !!formData,
-    retry: false,
-    refetchOnWindowFocus: false,
     onSuccess: onSuccess,
     onError: onError,
   });
