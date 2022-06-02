@@ -63,6 +63,12 @@ export const Chat = () => {
       setIsConnected(false);
     };
 
+    socket.current.onclose = () => {
+      dispatch(
+        setNotificationWithTimeout('Error', 'Connection have been closed.'),
+      );
+    };
+
     return () => {
       socket.current.close();
       clearTimeout(typingTimeoutID.current);
@@ -70,7 +76,12 @@ export const Chat = () => {
   }, []);
 
   useEffect(() => {
-    messageListEl.current?.lastElementChild.scrollIntoView();
+    if (messageListEl.current) {
+      messageListEl.current.scrollTo(
+        0,
+        messageListEl.current?.lastElementChild.offsetTop,
+      );
+    }
   }, [userMessages]);
 
   const handleFormSubmit = ({ text }, { resetForm }) => {
