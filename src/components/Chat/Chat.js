@@ -63,9 +63,12 @@ export const Chat = () => {
       setIsConnected(false);
     };
 
-    socket.current.onclose = () => {
+    socket.current.onclose = (event) => {
       dispatch(
-        setNotificationWithTimeout('Error', 'Connection have been closed.'),
+        setNotificationWithTimeout(
+          'Error',
+          event.reason || 'Connection have been closed.',
+        ),
       );
     };
 
@@ -77,10 +80,7 @@ export const Chat = () => {
 
   useEffect(() => {
     if (messageListEl.current) {
-      messageListEl.current.scrollTo(
-        0,
-        messageListEl.current?.lastElementChild.offsetTop,
-      );
+      messageListEl.current.scrollTo(0, messageListEl.current.offsetHeight);
     }
   }, [userMessages]);
 
