@@ -24,7 +24,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "heroku-postbuild": "npm run build && mkdir tmp && mv . ./tmp && ls -la",
+    "heroku-postbuild": "npm run build && rm -rf src public && ls -la",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint . --ext .js,.jsx",

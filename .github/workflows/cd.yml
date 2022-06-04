@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to Heroku
 
 on:
   push:
@@ -7,12 +7,11 @@ on:
 
 jobs:
   build:
-    needs: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_api_key: 'ba579369-6045-4c6b-a21d-db4810830f27'
           heroku_app_name: "infinite-woodland-61407"
           heroku_email: "test@example.com"
