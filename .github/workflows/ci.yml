@@ -1,4 +1,4 @@
-name: Integration
+name: CI
 
 on: [pull_request]
 
@@ -12,3 +12,21 @@ jobs:
         run: npm i
       - name: Run ESLint
         run: npm run lint
+
+
+name: CD
+on:
+  push:
+    branches:
+      - deployment
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ''
+          heroku_app_name: "infinite-woodland-61407"
+          heroku_email: "test@example.com"
