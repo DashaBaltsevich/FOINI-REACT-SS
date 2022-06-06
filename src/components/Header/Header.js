@@ -64,6 +64,9 @@ export const Header = () => {
                 <NavLink to="/me" className={setActive}>
                   My account
                 </NavLink>
+                <NavLink to="/chat" className={setActive}>
+                  Chat
+                </NavLink>
                 <button className="btn-login" onClick={handleLogout}>
                   Log Out
                 </button>
