@@ -25,7 +25,7 @@ const validationSchema = Yup.object({
     .min(4, 'Must be more than 4 characters'),
 });
 
-export const UserData = () => {
+const UserData = () => {
   const [isEditingEnable, setIsEditingEnable] = useState(false);
   const dispatch = useDispatch();
   const userInformation = useSelector(
@@ -225,3 +225,5 @@ export const UserData = () => {
     </div>
   );
 };
+
+export default UserData;

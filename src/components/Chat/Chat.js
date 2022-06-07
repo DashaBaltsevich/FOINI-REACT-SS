@@ -12,7 +12,7 @@ const validationSchema = yup.object({
     .max(200, 'Too big comment'),
 });
 
-export const Chat = () => {
+const Chat = () => {
   const [userMessages, setUserMessages] = useState([]);
   const [idOfConnection, setIdOfConnection] = useState('');
   const [isConnected, setIsConnected] = useState(false);
@@ -162,3 +162,5 @@ export const Chat = () => {
     </section>
   );
 };
+
+export default Chat;
