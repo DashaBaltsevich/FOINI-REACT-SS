@@ -1,19 +1,17 @@
 import { useAsync } from './hooks';
 import { getUserData } from './api/facades';
 import { Preloader } from './components/Preloader';
-import { useEffect } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Header,
   Footer,
   Main,
-  UserData,
   Services,
   Users,
   PrivateRoute,
   Notifications,
-  Chat,
 } from './components';
 import {
   setUserInformation,
@@ -21,6 +19,9 @@ import {
   setNotificationWithTimeout,
 } from './store/actions';
 import './App.scss';
+
+const UserData = lazy(() => import('./components/UserData'));
+const Chat = lazy(() => import('./components/Chat'));
 
 function App() {
   const { execute, loading } = useAsync(getUserData, [], [], false);
@@ -56,27 +57,31 @@ function App() {
   return (
     <div>
       <Header />
-      <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="services" element={<Services />} />
-        <Route path="users" element={<Users />} />
-        <Route
-          path="/me"
-          element={
-            <PrivateRoute isAllowed={isAuthorized}>
-              <UserData />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/chat"
-          element={
-            <PrivateRoute isAllowed={isAuthorized}>
-              <Chat />
-            </PrivateRoute>
-          }
-        />
-      </Routes>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="services" element={<Services />} />
+          <Route path="users" element={<Users />} />
+
+          <Route
+            path="/me"
+            element={
+              <PrivateRoute isAllowed={isAuthorized}>
+                <UserData />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <PrivateRoute isAllowed={isAuthorized}>
+                <Chat />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </Suspense>
+
       {loading ? <Preloader /> : null}
       <Footer />
       <Notifications />
