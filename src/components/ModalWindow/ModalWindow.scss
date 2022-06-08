@@ -2,11 +2,11 @@
     position: fixed;
     top: 0;
     left: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     width: 100%;
+    // display: inline-flex;
+    // flex-direction: column;
+    // justify-content: center;
+    // align-items: center;
     height: 100%;
     padding: 30px 20px;
     background-color: black;
@@ -14,7 +14,7 @@
     opacity: 0.9;
     text-align: center;
     will-change: transform;
-    overflow: auto;
+    overflow-y: auto;
 
     &__btn-close {
         font-size: 18px;

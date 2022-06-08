@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { useAsync } from '../../hooks';
 import { signOut } from '../../api/facades';
 import { setAuthState } from '../../store/actions';
-import { useDispatch, useSelector } from 'react-redux';
 import { ModalWindow, LoginForm, RegForm } from '..';
 import { Preloader } from '../Preloader';
 import './Header.scss';
@@ -22,10 +22,10 @@ export const Header = () => {
   const { execute, loading } = useAsync(signOut, [], [], false);
 
   const handleLogout = async () => {
-    await execute();
     dispatch(setAuthState(false));
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    await execute();
   };
 
   return (

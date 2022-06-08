@@ -1,16 +1,16 @@
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import { useAsync } from '../../hooks';
 import { getUserData } from '../../api/facades';
 import { updateUserData } from '../../api/facades';
 import { Preloader } from '../Preloader';
-import { useEffect, useState } from 'react';
 import {
   setAuthState,
   setUserInformation,
   setNotificationWithTimeout,
 } from '../../store/actions';
-import { useDispatch, useSelector } from 'react-redux';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 import './UserData.scss';
 
 const validationSchema = Yup.object({
@@ -56,7 +56,14 @@ const UserData = () => {
         dispatch(setUserInformation(data?.content));
       } catch (err) {
         dispatch(setAuthState(false));
-        alert(err?.response?.data?.message || err?.message || 'Unknown error!');
+        dispatch(
+          setNotificationWithTimeout(
+            'Error',
+            `${err?.response?.data?.message}` ||
+              `${err?.message}` ||
+              `Unknown error!`,
+          ),
+        );
       }
     })();
   }, [getUser]);

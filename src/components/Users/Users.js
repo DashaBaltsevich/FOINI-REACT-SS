@@ -1,9 +1,10 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import { getUsers } from '../../api/facades';
 import { useAsync } from '../../hooks';
-import { useDispatch, useSelector } from 'react-redux';
 import { onFetchUsersSuccess } from '../../store/actions';
-import { useEffect } from 'react';
 import { Preloader } from '../Preloader';
+import { setNotificationWithTimeout } from '../../store/actions';
 import './Users.scss';
 
 export const Users = () => {
@@ -23,8 +24,15 @@ export const Users = () => {
         if (data?.results) {
           dispatch(onFetchUsersSuccess(data.results));
         }
-      } catch (error) {
-        throw new Error('Error. No data');
+      } catch (err) {
+        dispatch(
+          setNotificationWithTimeout(
+            'Error',
+            `${err?.response?.data?.message}` ||
+              `${err?.message}` ||
+              `Unknown error!`,
+          ),
+        );
       }
     })();
   }, [users, onFetchUsersSuccess]);
@@ -35,25 +43,30 @@ export const Users = () => {
     <section className="s-team">
       <div className="container">
         <h2 className="s-team__title">Meet Us</h2>
-        <ul className="l-team">
-          {users.map((user) => (
-            <li className="l-team__card" key={user.name.first + user.name.last}>
-              <div className="l-team__cell">
-                <img
-                  className="l-team__photo"
-                  src={user.picture.large}
-                  alt={user.name.first + user.name.last}
-                />
-                <div className="l-team__text-wrapper">
-                  <h4 className="l-team__name">
-                    {user.name.first} {user.name.last}
-                  </h4>
-                  <p className="l-team__position">Photographer</p>
+        {!!users.length && (
+          <ul className="l-team">
+            {users.map((user) => (
+              <li
+                className="l-team__card"
+                key={user.name.first + user.name.last}
+              >
+                <div className="l-team__cell">
+                  <img
+                    className="l-team__photo"
+                    src={user.picture.large}
+                    alt={user.name.first + user.name.last}
+                  />
+                  <div className="l-team__text-wrapper">
+                    <h4 className="l-team__name">
+                      {user.name.first} {user.name.last}
+                    </h4>
+                    <p className="l-team__position">Photographer</p>
+                  </div>
                 </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
   );

@@ -8,6 +8,7 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
+    "plugin:import/errors",
     "prettier"
   ],
   "parserOptions": {
@@ -40,7 +41,14 @@
         "bracketSameLine": false,
         "endOfLine": "auto"
       }
-    ]
+    ],
+    "import/order": [
+      "error",
+      {
+        "groups": [["builtin", "external"], ["internal"], ["index", "parent", "sibling"]]
+      }
+    ],
+    "import/no-cycle": "error"
   },
   "settings": {
     "react": {

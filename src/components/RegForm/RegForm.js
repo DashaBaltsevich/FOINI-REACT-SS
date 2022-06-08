@@ -1,10 +1,10 @@
+import { useDispatch } from 'react-redux';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as yup from 'yup';
 import { useAsync } from '../../hooks';
 import { signUp } from '../../api/facades';
 import { Preloader } from '../Preloader';
-import { useDispatch } from 'react-redux';
 import { setNotificationWithTimeout } from '../../store/actions';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as yup from 'yup';
 import './RegForm.scss';
 
 const validationSchema = yup.object({
