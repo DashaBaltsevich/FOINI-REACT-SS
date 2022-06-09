@@ -31,7 +31,7 @@ export const ModalWindow = ({ children, onClose }) => {
     <>
       {children}
       <button onClick={onClose} className="b-modal-window__btn-close">
-        Закрыть
+        Х
       </button>
     </>,
     div,

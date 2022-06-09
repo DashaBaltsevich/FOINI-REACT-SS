@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAsync } from '../../hooks';
 import { signOut } from '../../api/facades';
 import { setAuthState } from '../../store/actions';
-import { ModalWindow, LoginForm, RegForm } from '..';
+import { ModalWindow } from '../ModalWindow';
+import { LoginForm } from '../LoginForm';
+import { RegForm } from '../RegForm';
 import { Preloader } from '../Preloader';
 import './Header.scss';
 

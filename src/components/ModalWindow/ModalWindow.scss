@@ -3,22 +3,27 @@
     top: 0;
     left: 0;
     width: 100%;
-    // display: inline-flex;
-    // flex-direction: column;
-    // justify-content: center;
-    // align-items: center;
     height: 100%;
-    padding: 30px 20px;
+    padding-top: 30px;
     background-color: black;
     color: #fff;
     opacity: 0.9;
     text-align: center;
     will-change: transform;
     overflow-y: auto;
-
+    &::after {
+        content: '';
+        display: inline-block;
+        vertical-align: middle;
+        height: 100%;
+        width: 0;
+    }
     &__btn-close {
-        font-size: 18px;
-        padding: 10px;
+        font-size: 24px;
         color: #fff;
+        position: fixed;
+        right: 50px;
+        top: 50px;
     }
 }
+
