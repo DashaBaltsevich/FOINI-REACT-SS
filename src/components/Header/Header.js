@@ -24,10 +24,13 @@ export const Header = () => {
   const { execute, loading } = useAsync(signOut, [], [], false);
 
   const handleLogout = async () => {
-    dispatch(setAuthState(false));
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    await execute();
+    try {
+      await execute();
+    } finally {
+      dispatch(setAuthState(false));
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+    }
   };
 
   return (

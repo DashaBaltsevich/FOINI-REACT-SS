@@ -20,10 +20,10 @@ export const ModalWindow = ({ children, onClose }) => {
     document.addEventListener('keydown', (e) => closeOnEscapeAction(e));
 
     return () => {
-      div.remove();
       document.querySelector('body').style.overflow = 'auto';
       div.removeEventListener('click', (e) => closeOnClickAction(e));
       document.removeEventListener('keydown', (e) => closeOnEscapeAction(e));
+      div.remove();
     };
   }, [div]);
 
