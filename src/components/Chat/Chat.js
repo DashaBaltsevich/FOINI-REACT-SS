@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { setNotificationWithTimeout } from '../../store/actions';
 import './Chat.scss';
 import * as yup from 'yup';
 import { Formik, Field, ErrorMessage, Form } from 'formik';
 import { useDispatch } from 'react-redux';
+import { setNotificationWithTimeout } from '../../store/actions';
 
 const validationSchema = yup.object({
   text: yup

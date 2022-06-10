@@ -1,8 +1,8 @@
-import { setAuthState, setNotificationWithTimeout } from '../../store/actions';
 import { useDispatch } from 'react-redux';
-import { useAsync } from '../../hooks';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
+import { useAsync } from '../../hooks';
+import { setAuthState, setNotificationWithTimeout } from '../../store/actions';
 import { Preloader } from '../Preloader';
 import { signIn } from '../../api/facades';
 import './LoginForm.scss';

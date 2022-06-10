@@ -1,9 +1,9 @@
-import { useAsync } from './hooks';
-import { getUserData } from './api/facades';
-import { Preloader } from './components/Preloader';
 import { useEffect, Suspense, lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useAsync } from './hooks';
+import { getUserData } from './api/facades';
+import { Preloader } from './components/Preloader';
 import {
   Header,
   Footer,
@@ -55,7 +55,7 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <>
       <Header />
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
@@ -85,7 +85,7 @@ function App() {
       {loading ? <Preloader /> : null}
       <Footer />
       <Notifications />
-    </div>
+    </>
   );
 }
 

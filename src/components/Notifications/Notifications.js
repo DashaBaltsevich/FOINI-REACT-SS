@@ -1,5 +1,5 @@
-import { deleteNotification } from '../../store/actions';
 import { useSelector, useDispatch } from 'react-redux';
+import { deleteNotification } from '../../store/actions';
 import './Notifications.scss';
 
 export const Notifications = () => {

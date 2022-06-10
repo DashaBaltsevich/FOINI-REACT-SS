@@ -1,6 +1,9 @@
 .f-login {
-    display: flex;
+    display: inline-flex;
+    align-items: center;
     flex-direction: column;
+    vertical-align: middle;
+    width: 310px;
     padding: 20px 60px;
     border: 1px red solid;
 
@@ -29,6 +32,7 @@
 
     &__btn-submit {
         margin-top: 40px;
+        width: 200px;
         padding: 20px 22px;
         border: 1px green solid;
         color: #fff;
