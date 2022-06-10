@@ -5,7 +5,7 @@ export const Main = () => {
     <section className="s-main">
       <div className="container">
         <h1 className="s-main__title">
-          We Love <span>Foinni</span> Polapain
+          We Love <span>Foinni</span> Polapain!
         </h1>
         <p className="s-main__text">
           Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto
