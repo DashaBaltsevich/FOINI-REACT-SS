@@ -186,7 +186,7 @@ const UserData = () => {
                     />
                   </div>
 
-                  <div>
+                  <div className="f-edit-userdata__btn-wrap">
                     <button
                       className="f-edit-userdata__btn-submit"
                       type="submit"

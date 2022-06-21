@@ -5,7 +5,6 @@ import { useAsync } from './hooks';
 import { getUserData } from './api/facades';
 import { Preloader } from './components/Preloader';
 import {
-  Header,
   Footer,
   Main,
   Services,
@@ -13,6 +12,7 @@ import {
   PrivateRoute,
   Notifications,
 } from './components';
+import { Header } from './components/Header/Header';
 import {
   setUserInformation,
   setAuthState,

@@ -8,3 +8,4 @@ export * from './Services';
 export * from './Users';
 export * from './PrivateRoute';
 export * from './Notifications';
+export * from './NavBar';

@@ -11,6 +11,7 @@
     text-align: center;
     will-change: transform;
     overflow-y: auto;
+    z-index: 5;
     &::after {
         content: '';
         display: inline-block;
@@ -22,8 +23,8 @@
         font-size: 24px;
         color: #fff;
         position: fixed;
-        right: 50px;
-        top: 50px;
+        right: 30px;
+        top: 37px;
     }
 }
 
