@@ -28,6 +28,7 @@
     }
 
     &__cell {
+        height: 100%;
         background-color: gray;
         padding-top: 10px;
         color: #fff;
@@ -59,4 +60,26 @@
 /*hover*/
 .l-team__cell:hover {
     transform: scale(1.05);
+}
+
+@media (max-width: 576px) {
+    .l-team {
+        &__card {
+            width: 50%;
+        }
+    }
+    .l-team__card:nth-last-child(1), .l-team__card:nth-last-child(2) {
+        padding-top: 15px;
+    }
+
+    .l-team__cell:hover {
+        transform: scale(1);
+    }
+}
+
+@media(max-width: 479px) {
+    .s-team__title {
+        font-size: 30px;
+        margin-bottom: 40px;
+    }
 }
