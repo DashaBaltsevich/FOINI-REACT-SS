@@ -36,8 +36,11 @@ export const MobileNavigation = ({
       });
     }
     return () => {
-      burger.removeEventListener('click', () => toggleClassList);
-      mobileMenu.removeEventListener('click', (e) => removeClassList(e));
+      if (burger) {
+        burger.removeEventListener('click', () => toggleClassList);
+        mobileMenu.removeEventListener('click', (e) => removeClassList(e));
+      }
+
     };
   }, [burger, mobileMenu]);
 
