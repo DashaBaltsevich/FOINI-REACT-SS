@@ -39,6 +39,11 @@ const Chat = () => {
           typingTimeoutID.current = null;
         }, 1000);
         break;
+      case 'REMOVE_ALL':
+        if (action.payload === true) {
+          setUserMessages('');
+        }
+        break;
     }
   };
 
@@ -101,6 +106,14 @@ const Chat = () => {
     socket.current.send(JSON.stringify(action));
   };
 
+  const deleteMessages = () => {
+    const action = {
+      type: 'REMOVE_ALL',
+      payload: true,
+    };
+    socket.current.send(JSON.stringify(action));
+  };
+
   return (
     <section className="s-chat">
       <div className="container">
@@ -158,6 +171,9 @@ const Chat = () => {
             </Form>
           )}
         </Formik>
+        <button onClick={deleteMessages} className="s-chat__btn-clear">
+          Очистить Чат
+        </button>
       </div>
     </section>
   );
