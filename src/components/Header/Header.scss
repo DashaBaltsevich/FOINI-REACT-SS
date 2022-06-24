@@ -52,7 +52,7 @@
   transform: scaleX(1);
 }
 
-.btn-login {
+.btn-login, .btn-logout, .btn-registration {
   color: #fff;
   border: none;
   border-radius: 15px;
@@ -66,6 +66,70 @@
   background-color: rgb(44, 73, 0);
 }
 
-.btn-login:first-child {
-  margin-right: 10px;
+.burger {
+  display: none;
+}
+
+@media (max-width: 810px) {
+  .header__nav {
+    display: none;
+  }
+  .header__nav.mobile-nav_open {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    padding: 110px 30px;
+    background-color: rgba(0, 0, 0, .8);
+  }
+  .l-nav__item + .l-nav__item {
+    margin-left: 0px;
+    margin-top: 10px;
+  }
+  .l-nav.mobile-list_open {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .burger {
+    display: block;
+    width: 40px;
+    height: 30px;
+  }
+  .burger__span {
+    display: block;
+    background-color:#fff;
+    height: 3px;
+  }
+  .burger.active {
+    margin: 0 auto;
+    margin-right: 0px;
+  }
+  .burger__span {
+      transition: transform 0.2s;
+  }
+  .burger.active .burger__span:nth-child(1) {
+      transform: rotate(45deg);
+      position: absolute;
+      top: 50px;
+      width: 37px;
+  }
+  .burger.active .burger__span:nth-child(2) {
+      display: none;
+  }
+  .burger.active .burger__span:nth-child(3) {
+      transform: rotate(-45deg);
+      position: absolute;
+      width: 37px;
+      top: 44px;
+  }
+
+  .burger__span:nth-child(1) ~ .burger__span {
+      margin-top: 6px;
+  }
+  .l-nav__link:hover::before {
+    transform: scaleX(0);
+  }
 }
