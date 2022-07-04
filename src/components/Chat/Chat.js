@@ -64,12 +64,14 @@ const Chat = () => {
     };
 
     socket.current.onclose = (event) => {
-      dispatch(
-        setNotificationWithTimeout(
-          'Error',
-          event.reason || 'Connection have been closed.',
-        ),
-      );
+      if (!event.wasClean) {
+        dispatch(
+          setNotificationWithTimeout(
+            'Error',
+            event.reason || 'Connection have been closed.',
+          ),
+        );
+      }
     };
 
     return () => {
