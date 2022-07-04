@@ -93,6 +93,7 @@ export const LoginForm = ({ setIsLoginFormVisible }) => {
                 id="password"
                 name="password"
                 className="f-login__field"
+                autoComplete="on"
               />
               <ErrorMessage
                 name="password"

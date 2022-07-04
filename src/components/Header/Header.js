@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAsync } from '../../hooks';
@@ -15,9 +15,6 @@ export const Header = () => {
     isActive ? 'l-nav__link-active l-nav__link' : 'l-nav__link';
   const [isLoginFormVisible, setIsLoginFormVisible] = useState(false);
   const [isRegFormVisible, setIsRegFormVisible] = useState(false);
-  const burger = document.querySelector('.burger');
-  const headerNav = document.querySelector('.header__nav');
-  const listNav = document.querySelector('.l-nav');
 
   const dispatch = useDispatch();
   const isAuthorized = useSelector(
@@ -37,9 +34,9 @@ export const Header = () => {
   };
 
   const toggleClass = () => {
-    burger.classList.toggle('active');
-    headerNav.classList.toggle('mobile-nav_open');
-    listNav.classList.toggle('mobile-list_open');
+    document.querySelector('.burger').classList.toggle('active');
+    document.querySelector('.header__nav').classList.toggle('mobile-nav_open');
+    document.querySelector('.l-nav').classList.toggle('mobile-list_open');
   };
 
   const removeClassList = (e) => {
@@ -48,24 +45,13 @@ export const Header = () => {
       e.target.classList.contains('btn-login') ||
       e.target.classList.contains('btn-logout')
     ) {
-      burger.classList.remove('active');
-      headerNav.classList.remove('mobile-nav_open');
-      listNav.classList.remove('mobile-list_open');
+      document.querySelector('.burger').classList.remove('active');
+      document
+        .querySelector('.header__nav')
+        .classList.remove('mobile-nav_open');
+      document.querySelector('.l-nav').classList.remove('mobile-list_open');
     }
   };
-
-  useEffect(() => {
-    if (burger) {
-      burger.addEventListener('click', () => toggleClass());
-      headerNav.addEventListener('click', (e) => removeClassList(e));
-    }
-    return () => {
-      if (burger) {
-        burger.removeEventListener('click', () => toggleClass());
-        headerNav.removeEventListener('click', (e) => removeClassList(e));
-      }
-    };
-  }, [burger]);
 
   return (
     <>
@@ -78,7 +64,7 @@ export const Header = () => {
                 <img src="./img/logo.png" className="App-logo" alt="logo" />
               </NavLink>
             </div>
-            <nav className="header__nav">
+            <nav className="header__nav" onClick={(e) => removeClassList(e)}>
               <ul className="l-nav">
                 <li className="l-nav__item">
                   <NavLink to="/" className={setActive}>
@@ -135,7 +121,11 @@ export const Header = () => {
                 )}
               </ul>
             </nav>
-            <button type="button" className="burger">
+            <button
+              type="button"
+              className="burger"
+              onClick={() => toggleClass()}
+            >
               <span className="burger__span"></span>
               <span className="burger__span"></span>
               <span className="burger__span"></span>
