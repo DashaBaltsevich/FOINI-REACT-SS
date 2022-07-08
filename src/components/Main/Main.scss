@@ -27,3 +27,19 @@
         line-height: 40px;
     }
 }
+
+@media(max-width: 576px) {
+    .s-main {
+        &__title {
+            font-size: 30px;
+            > span {
+                font-size: 32px;
+           }
+        }
+
+        &__text {
+            font-size: 16px;
+            line-height: 30px;
+        }
+    }
+} 

@@ -33,6 +33,26 @@ export const Header = () => {
     }
   };
 
+  const toggleClass = () => {
+    document.querySelector('.burger').classList.toggle('active');
+    document.querySelector('.header__nav').classList.toggle('mobile-nav_open');
+    document.querySelector('.l-nav').classList.toggle('mobile-list_open');
+  };
+
+  const removeClassList = (e) => {
+    if (
+      e.target.classList.contains('l-nav__link') ||
+      e.target.classList.contains('btn-login') ||
+      e.target.classList.contains('btn-logout')
+    ) {
+      document.querySelector('.burger').classList.remove('active');
+      document
+        .querySelector('.header__nav')
+        .classList.remove('mobile-nav_open');
+      document.querySelector('.l-nav').classList.remove('mobile-list_open');
+    }
+  };
+
   return (
     <>
       {loading && <Preloader />}
@@ -44,7 +64,7 @@ export const Header = () => {
                 <img src="./img/logo.png" className="App-logo" alt="logo" />
               </NavLink>
             </div>
-            <nav className="header__nav">
+            <nav className="header__nav" onClick={(e) => removeClassList(e)}>
               <ul className="l-nav">
                 <li className="l-nav__item">
                   <NavLink to="/" className={setActive}>
@@ -61,37 +81,55 @@ export const Header = () => {
                     Users
                   </NavLink>
                 </li>
+                {isAuthorized ? (
+                  <>
+                    <li className="l-nav__item">
+                      <NavLink to="/me" className={setActive}>
+                        My account
+                      </NavLink>
+                    </li>
+                    <li className="l-nav__item">
+                      <NavLink to="/chat" className={setActive}>
+                        Chat
+                      </NavLink>
+                    </li>
+                    <li className="l-nav__item">
+                      <button className="btn-logout" onClick={handleLogout}>
+                        Log Out
+                      </button>
+                    </li>
+                  </>
+                ) : (
+                  <>
+                    <li className="l-nav__item">
+                      <button
+                        className="btn-login"
+                        onClick={() => setIsLoginFormVisible(true)}
+                      >
+                        Sign in
+                      </button>
+                    </li>
+                    <li className="l-nav__item">
+                      <button
+                        className="btn-registration"
+                        onClick={() => setIsRegFormVisible(true)}
+                      >
+                        Sign up
+                      </button>
+                    </li>
+                  </>
+                )}
               </ul>
             </nav>
-
-            {isAuthorized ? (
-              <>
-                <NavLink to="/me" className={setActive}>
-                  My account
-                </NavLink>
-                <NavLink to="/chat" className={setActive}>
-                  Chat
-                </NavLink>
-                <button className="btn-login" onClick={handleLogout}>
-                  Log Out
-                </button>
-              </>
-            ) : (
-              <div className="btn-login__wrapper">
-                <button
-                  className="btn-login"
-                  onClick={() => setIsLoginFormVisible(true)}
-                >
-                  Sign in
-                </button>
-                <button
-                  className="btn-login"
-                  onClick={() => setIsRegFormVisible(true)}
-                >
-                  Sign up
-                </button>
-              </div>
-            )}
+            <button
+              type="button"
+              className="burger"
+              onClick={() => toggleClass()}
+            >
+              <span className="burger__span"></span>
+              <span className="burger__span"></span>
+              <span className="burger__span"></span>
+            </button>
           </div>
         </div>
       </header>
