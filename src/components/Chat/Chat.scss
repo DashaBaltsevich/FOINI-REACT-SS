@@ -17,6 +17,13 @@
     &__typing {
         text-align: center;
     }
+    &__btn-clear {
+        padding: 10px 22px;
+        border: 1px green solid;
+        display: block;
+        margin: 0 auto;
+        margin-top: 30px;
+    }
 }
 
 .l-chat {

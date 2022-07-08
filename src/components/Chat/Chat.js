@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import './Chat.scss';
 import * as yup from 'yup';
 import { Formik, Field, ErrorMessage, Form } from 'formik';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setNotificationWithTimeout } from '../../store/actions';
 
 const validationSchema = yup.object({
@@ -21,6 +21,9 @@ const Chat = () => {
   const messageListEl = useRef();
   const dispatch = useDispatch();
   const typingTimeoutID = useRef();
+  const userInformation = useSelector(
+    (state) => state.authenticationReducer.userInformation,
+  );
 
   const wsReducer = (action) => {
     switch (action.type) {
@@ -38,6 +41,11 @@ const Chat = () => {
           setTyping('');
           typingTimeoutID.current = null;
         }, 1000);
+        break;
+      case 'REMOVE_ALL':
+        if (action.payload === true) {
+          setUserMessages('');
+        }
         break;
     }
   };
@@ -101,6 +109,14 @@ const Chat = () => {
     socket.current.send(JSON.stringify(action));
   };
 
+  const deleteMessages = () => {
+    const action = {
+      type: 'REMOVE_ALL',
+      payload: true,
+    };
+    socket.current.send(JSON.stringify(action));
+  };
+
   return (
     <section className="s-chat">
       <div className="container">
@@ -158,6 +174,11 @@ const Chat = () => {
             </Form>
           )}
         </Formik>
+        {userInformation?.email === 'dasha.baltsevich4@mail.ru' ? (
+          <button onClick={deleteMessages} className="s-chat__btn-clear">
+            Очистить Чат
+          </button>
+        ) : null}
       </div>
     </section>
   );
